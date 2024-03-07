@@ -1,46 +1,38 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import Home from './src/Home';
+import List from './src/List';
+import Done from './src/Done';
 
+
+const Tab = createBottomTabNavigator()
 
 function App() {
   
-
   return (
-    <View style={styles.main}>
-      <Text style={styles.text}>Crazy Shopper</Text>
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen 
+          name='Home'
+          component={Home}
+        />
+        <Tab.Screen 
+          name='List'
+          component={List}
+        />
+         <Tab.Screen 
+          name='Done'
+          component={Done}
+        />
+   
+    </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    alignItems:'center',
-    justifyContent: 'center',
-    backgroundColor: 'yellow'
-  },
-  text: {
-    fontSize: 20,
-    color: 'blue',
-    fontWeight: 'bold'
-  }
-  
-});
+
 
 export default App;
