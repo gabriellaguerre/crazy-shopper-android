@@ -1,12 +1,26 @@
 import React from 'react'
-import { StyleSheet, Text, View, } from 'react-native';
+import { Button, StyleSheet, Text, View, } from 'react-native';
+import CreateList from './CreateList';
 
-function Home() {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { NavigationContainer } from '@react-navigation/native';
+
+
+
+function Home({navigation}) {
  
     return (
+     
        <View style={styles.main}>
          <Text style={styles.text}>Crazy Shopper</Text>
+         <Button 
+          title='Add Item'
+          onPress={()=>navigation.navigate('CreateList')}
+          />
+        
       </View>
+   
+      
     )
 
 }
