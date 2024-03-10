@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { Text, StyleSheet, View, TextInput, Button, Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from './redux/itemsSlice';
+import { selectAllItems } from './redux/itemsSlice';
+import { nanoid } from '@reduxjs/toolkit';
 
 
 
 function AddItemForm({navigation}) {
- 
+  const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
 
   const [item, setItem] = useState('')
@@ -15,13 +17,24 @@ function AddItemForm({navigation}) {
   const [price, setPrice] = useState('')
 
   const createItem = async () => {
-    if(item) {
-      dispatch(addItem(item, desc, price)
-      )
+    if(item && desc && price) {
+      dispatch(addItem(item, desc, price))
       Alert.alert('Success', `Successfully Added ${item}`)
       setItem('')
       setDesc('')
       setPrice('')
+      try {
+        const itemsList = [...items, { id, item, desc, price}]
+        const jsonValue = JSON.stringify(itemsList)
+        await AsyncStorage.setItem('Items', jsonValue)
+      } catch (error) {
+        console.log(error)
+      }
+      // const itemsList = useSelector(selectAllItems)
+      // console.log(itemsList, 'ITEMS LIST')
+      // const jsonValue = JSON.stringify(itemsList)
+      // console.log(jsonValue, 'JSON VALUE')
+      // await AsyncStorage.setItem('Items', jsonValue)
     } else {
       Alert.alert('Warning', 'Please enter an item')
     }

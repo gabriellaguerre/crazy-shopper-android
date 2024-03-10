@@ -1,31 +1,16 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit";
 
-const initialState = [
-    {id: '1', item: 'sugar', desc: 'sweetener', price: 2.92},
-    {id: '2', item: 'juice', desc: 'apple juice', price: 3.62},
-    ]
+const initialState = []
 
 const itemsSlice = createSlice({
     name: 'items',
     initialState,
     reducers: {
-        addItem: {
-            reducer(state, action) {
+        addItem(state, action) {
                 state.push(action.payload)
+        }
+            
         },
-            prepare(item, desc, price){
-                return {
-                    payload: {
-                        id: nanoid(),
-                        item,
-                        desc,
-                        price
-                    }
-                }
-            }
-        },
-      
-    }
 })
 
 export const selectAllItems = (state) => state.items;
