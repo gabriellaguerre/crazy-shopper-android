@@ -2,38 +2,42 @@ import React, { useEffect } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux';
-import { idAugmented, selectAllLists, itemAdded } from './redux/listsSlice';
+import { selectAllItems, itemAdded } from './redux/itemsSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 function Home({navigation}) {
-  const {lists} = useSelector(selectAllLists)
+  const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
-    
-  useEffect(()=>{
-      getList()
-    },[])
 
-    const getList = () => {
-      AsyncStorage.getItem('Lists')
-      .then(lists=>{
-           const parsedLists = JSON.parse(lists)
-           if(parsedLists && typeof parsedLists === 'object'){
-            dispatch(itemAdded(parsedLists))
-           }
-      })
-      .catch(err => console.log(err))
-    }
+  console.log(items)
+    
+  // useEffect(()=>{
+  //     getList()
+  //   },[])
+
+  //   const getList = () => {
+  //     AsyncStorage.getItem('Lists')
+  //     .then(lists=>{
+  //          const parsedLists = JSON.parse(lists)
+  //          if(parsedLists && typeof parsedLists === 'object'){
+  //           dispatch(itemAdded(parsedLists))
+  //          }
+  //     })
+  //     .catch(err => console.log(err))
+  //   }
     return (
      
        <View style={styles.main}>
-         <Text style={styles.text}>Crazy Shopper</Text>
+         <Text style={styles.text}>Items List</Text>
+         {items.map(item => (
+            <Text key={item.id}>{item.item} {item.desc.substring(0,25)} {item.price}</Text>
+         ))}
          <TouchableOpacity 
           style={styles.button}
           onPress={()=>{
-            dispatch(idAugmented())
-            navigation.navigate('CreateList')}}
+            navigation.navigate('AddItemForm')}}
           >
            <FontAwesome5 
             name={'plus'}

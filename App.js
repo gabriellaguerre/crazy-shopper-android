@@ -6,7 +6,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Home from './src/Home';
 import List from './src/List';
 import Done from './src/Done';
-import CreateList from './src/CreateList';
+import AddItemForm from './src/AddItemForm';
 import Splash from './src/Splash';
 import { store } from './src/redux/store';
 import { Provider } from 'react-redux';
@@ -86,8 +86,8 @@ function HomeTabNavigator(){
           options={{ headerShown: false }}
          />
         <Stack.Screen 
-          name='CreateList'
-          component={CreateList}
+          name='AddItemForm'
+          component={AddItemForm}
           // options={{ headerShown: false }}
          />
       </Stack.Navigator>

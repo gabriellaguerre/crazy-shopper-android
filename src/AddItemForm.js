@@ -1,27 +1,29 @@
 import React, { useState } from 'react'
 import { Text, StyleSheet, View, TextInput, Button, Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectAllLists } from './redux/listsSlice';
+import { useDispatch } from 'react-redux';
+import { addItem } from './redux/itemsSlice';
 
 
-function CreateList({navigation}) {
-  const {lists} = useSelector(selectAllLists)
+
+function AddItemForm({navigation}) {
+ 
   const dispatch = useDispatch()
 
   const [item, setItem] = useState('')
   const [desc, setDesc] = useState('')
   const [price, setPrice] = useState('')
 
-  const addItem = async () => {
-    if(itemName==0){
-      Alert.alert('Warning', 'Item Name is empty')
+  const createItem = async () => {
+    if(item) {
+      dispatch(addItem(item, desc, price)
+      )
+      Alert.alert('Success', `Successfully Added ${item}`)
+      setItem('')
+      setDesc('')
+      setPrice('')
     } else {
-      try {
-      await AsyncStorage.setItem('Item', itemName)
-    } catch (error) {
-      console.log(error)
-    }
+      Alert.alert('Warning', 'Please enter an item')
     }
   }
 
@@ -59,7 +61,7 @@ function CreateList({navigation}) {
           title='Add Item to List'
           color='green'
           onChangeText={(value)=>setItemName(value)}
-          onPress={addItem}/>
+          onPress={createItem}/>
         </View>
         <Button 
           title='Done'
@@ -96,4 +98,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default CreateList
+export default AddItemForm
