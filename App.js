@@ -3,17 +3,20 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import HomeScreen from './src/Home';
-import ListScreen from './src/List';
-import DoneScreen from './src/Done';
-import CreateListScreen from './src/CreateList';
-
+import Home from './src/Home';
+import List from './src/List';
+import Done from './src/Done';
+import CreateList from './src/CreateList';
+import Splash from './src/Splash';
+import { store } from './src/redux/store';
+import { Provider } from 'react-redux';
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
 
 function App() {
   return (
+    <Provider store={store}>
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -40,30 +43,31 @@ function App() {
               />
             )
           },
-          
+          tabBarShowLabel: false,
         }
         )}
-        tabBarOptions={{
-          showLabel: false,
-          activeBackgroundColor: 'Blue'
-        }}
       >
         <Tab.Screen 
           name='Home'
           component={HomeTabNavigator}
+          options={{ headerShown: false }}
         />
         <Tab.Screen 
           name='List'
-          component={ListScreen}
-          options={{ tabBarBadge: 3}}
+          component={List}
+          options={{ tabBarBadge: 3,
+                    headerShown: false}}
+          
         />
          <Tab.Screen 
           name='Done'
-          component={DoneScreen}
-          options={{ tabBarBadge: 2}}
+          component={Done}
+          options={{ tabBarBadge: 2,
+                     headerShown: false}}
         />
     </Tab.Navigator>  
     </NavigationContainer>
+    </Provider>
   );
 }
 
@@ -71,13 +75,20 @@ function HomeTabNavigator(){
   return(
    
       <Stack.Navigator>
+         <Stack.Screen 
+          name='Splash'
+          component={Splash}
+          options={{ headerShown: false }}
+         />
       <Stack.Screen 
-          name='Home'
-          component={HomeScreen}
+          name='HomeScreen'
+          component={Home}
+          options={{ headerShown: false }}
          />
         <Stack.Screen 
           name='CreateList'
-          component={CreateListScreen}
+          component={CreateList}
+          // options={{ headerShown: false }}
          />
       </Stack.Navigator>
 
