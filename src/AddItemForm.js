@@ -1,43 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, StyleSheet, View, TextInput, Button, Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem } from './redux/itemsSlice';
-import { selectAllItems } from './redux/itemsSlice';
+import { addItem, updateItem, selectAllItems } from './redux/itemsSlice';
+i
 import { nanoid } from '@reduxjs/toolkit';
 
 
 
-function AddItemForm({navigation}) {
+function AddItemForm({navigation, route}) {
+  const {item: selectedItem} = route.params
   const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
 
-  const [item, setItem] = useState('')
-  const [desc, setDesc] = useState('')
-  const [price, setPrice] = useState('')
+  const [item, setItem] = useState(selectedItem ? selectedItem.item : '')
+  const [desc, setDesc] = useState(selectedItem ? selectedItem.desc : '')
+  const [price, setPrice] = useState(selectedItem ? selectedItem.price.toString() : '')
+
+  useEffect(()=>{
+    if(selectedItem) {
+      setItem(selectedItem.item);
+      setDesc(selectedItem.desc);
+      setPrice(selectedItem.price.toString());
+    }
+  },[selectedItem])
 
   const createItem = async () => {
-    if(item && desc && price) {
-      dispatch(addItem(item, desc, price))
-      Alert.alert('Success', `Successfully Added ${item}`)
-      setItem('')
-      setDesc('')
-      setPrice('')
-      try {
-        const itemsList = [...items, { id, item, desc, price}]
+    try {
+      if(item && desc && price) {
+        const newItem = {id: selectedItem ? selectedItem.id : nanoid(), item: item, desc: desc, price: price}
+        dispatch(addItem(newItem))
+        Alert.alert('Success', `Successfully Added ${item}`)
+        setItem('')
+        setDesc('')
+        setPrice('')
+     
+        const itemsList = [...items, newItem]
         const jsonValue = JSON.stringify(itemsList)
         await AsyncStorage.setItem('Items', jsonValue)
+      } else {
+        Alert.alert('Warning', 'Please enter an item')
+      }
       } catch (error) {
         console.log(error)
-      }
-      // const itemsList = useSelector(selectAllItems)
-      // console.log(itemsList, 'ITEMS LIST')
-      // const jsonValue = JSON.stringify(itemsList)
-      // console.log(jsonValue, 'JSON VALUE')
-      // await AsyncStorage.setItem('Items', jsonValue)
-    } else {
-      Alert.alert('Warning', 'Please enter an item')
-    }
+    } 
   }
 
   const returnHome = () => {
