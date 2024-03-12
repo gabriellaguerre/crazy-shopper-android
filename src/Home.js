@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAllItems, addItem, removeList } from './redux/itemsSlice';
+import { selectAllItems, addItem, deleteAll } from './redux/itemsSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { nanoid } from '@reduxjs/toolkit';
 
@@ -40,8 +40,8 @@ function Home({navigation}) {
     const deleteList = async () => {
       try {
       await AsyncStorage.clear()
-       .then(dispatch(removeList()))
-       .then(navigation.navigate('Home'))
+       .then(dispatch(deleteAll()))
+       
      
         
         Alert.alert('Success', 'Successfully deleted all items')
@@ -50,21 +50,21 @@ function Home({navigation}) {
       }
      
     }
-    // const navigateToAddItemForm = (item) => {
-    //   navigation.n
-    // }
+    const navigateToAddItemForm = (item) => {
+      navigation.navigate('AddItemForm', { item })
+    }
 
     return (
      
        <View style={styles.main}>
          <Text style={styles.text}>Items List</Text>
+         {items && 
          <FlatList 
             data={items}
             renderItem={({ item }) => (
               <TouchableOpacity 
                     style={styles.items}
-                    onPress={()=>{
-                    navigation.navigate('AddItemForm', { item })
+                    onPress={()=>{navigateToAddItemForm(item)                
                     }}
                     >
                 <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
@@ -74,7 +74,7 @@ function Home({navigation}) {
             )}
             keyExtractor={(item, index) => index.toString()}
          />
-       
+         }
          <TouchableOpacity 
           style={styles.button}
           onPress={()=>{

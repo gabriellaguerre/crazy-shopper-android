@@ -3,32 +3,32 @@ import { Text, StyleSheet, View, TextInput, Button, Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, updateItem, selectAllItems } from './redux/itemsSlice';
-i
 import { nanoid } from '@reduxjs/toolkit';
 
 
 
 function AddItemForm({navigation, route}) {
-  const {item: selectedItem} = route.params
+  const {item: thisitem} = route.params ? route.params : 0
+  console.log(thisitem, 'THIS ITEM')
   const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
 
-  const [item, setItem] = useState(selectedItem ? selectedItem.item : '')
-  const [desc, setDesc] = useState(selectedItem ? selectedItem.desc : '')
-  const [price, setPrice] = useState(selectedItem ? selectedItem.price.toString() : '')
+  const [item, setItem] = useState(thisitem ? thisitem.item : '')
+  const [desc, setDesc] = useState(thisitem ? thisitem.desc : '')
+  const [price, setPrice] = useState(thisitem ? thisitem.price.toString() : '')
 
   useEffect(()=>{
-    if(selectedItem) {
-      setItem(selectedItem.item);
-      setDesc(selectedItem.desc);
-      setPrice(selectedItem.price.toString());
+    if(thisitem) {
+      setItem(thisitem.item);
+      setDesc(thisitem.desc);
+      setPrice(thisitem.price.toString());
     }
-  },[selectedItem])
+  },[thisitem])
 
   const createItem = async () => {
     try {
       if(item && desc && price) {
-        const newItem = {id: selectedItem ? selectedItem.id : nanoid(), item: item, desc: desc, price: price}
+        const newItem = {id: nanoid(), item: item, desc: desc, price: price}
         dispatch(addItem(newItem))
         Alert.alert('Success', `Successfully Added ${item}`)
         setItem('')
@@ -46,8 +46,37 @@ function AddItemForm({navigation, route}) {
     } 
   }
 
+  const editItem = async () => {
+    try {
+        if(item && desc && price) {
+          const editItem = {id: thisitem.id, item, desc, price}
+          dispatch(updateItem(editItem))
+          navigation.goBack()
+          Alert.alert('Success', `Successfully edited ${item}`)
+          setItem('')
+          setDesc('')
+          setPrice('')
+
+          const updatedItems = items.map(i => (i.id === editItem.id ? editItem : i));
+          await AsyncStorage.setItem('Items', JSON.stringify(updatedItems));
+        } else {
+          Alert.alert('Warning', 'Please enter all item details');
+          await AsyncStorage.setItem('Items', jsonValue)
+          
+        } 
+
+    }catch (error) {
+      console.log(error)
+    }
+   }
+
   const returnHome = () => {
-    navigation.goBack()
+    if(item) {
+      Alert.alert('Warning', 'Do you want to save this item? Then click on "Add This Item Button first"')
+    } else {
+      navigation.goBack()
+    }
+    
   }
     return (
     
@@ -76,15 +105,27 @@ function AddItemForm({navigation, route}) {
             />
 
         <View style={styles.addItemButton}>
+          {!thisitem ? (
           <Button 
-          title='Add Item to List'
-          color='green'
-          onChangeText={(value)=>setItemName(value)}
-          onPress={createItem}/>
+               title='Add Item to List'
+               color='green'
+              //  onChangeText={(value)=>setItemName(value)}
+               onPress={createItem}/>
+          ):(
+          <Button 
+            title='Update Item'
+            color='blue'
+            // onChangeText={(value)=>setItemName(value)}
+            onPress={editItem}
+            />
+            )}
+         
         </View>
+        {!thisitem && 
         <Button 
           title='Done'
           onPress={returnHome}/>
+        }
       </View>
      
       
