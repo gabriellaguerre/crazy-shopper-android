@@ -9,31 +9,34 @@ import { nanoid } from '@reduxjs/toolkit';
 
 function AddItemForm({navigation, route}) {
   const {item: thisitem} = route.params ? route.params : 0
-  console.log(thisitem, 'THIS ITEM')
+ 
   const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
 
   const [item, setItem] = useState(thisitem ? thisitem.item : '')
   const [desc, setDesc] = useState(thisitem ? thisitem.desc : '')
   const [price, setPrice] = useState(thisitem ? thisitem.price.toString() : '')
+  const [store, setStore] = useState(thisitem ? thisitem.store : '')
 
   useEffect(()=>{
     if(thisitem) {
       setItem(thisitem.item);
       setDesc(thisitem.desc);
       setPrice(thisitem.price.toString());
+      setStore(thisitem.store)
     }
   },[thisitem])
 
   const createItem = async () => {
     try {
-      if(item && desc && price) {
-        const newItem = {id: nanoid(), item: item, desc: desc, price: price}
+      if(item && desc && price && store) {
+        const newItem = {id: nanoid(), item: item, desc: desc, price: price, store: store}
         dispatch(addItem(newItem))
-        Alert.alert('Success', `Successfully Added ${item}`)
+        Alert.alert('Success', `Successfully added ${item}`)
         setItem('')
         setDesc('')
         setPrice('')
+        setStore('')
      
         const itemsList = [...items, newItem]
         const jsonValue = JSON.stringify(itemsList)
@@ -48,14 +51,15 @@ function AddItemForm({navigation, route}) {
 
   const editItem = async () => {
     try {
-        if(item && desc && price) {
-          const editItem = {id: thisitem.id, item, desc, price}
+        if(item && desc && price && store) {
+          const editItem = {id: thisitem.id, item, desc, price, store}
           dispatch(updateItem(editItem))
           navigation.goBack()
           Alert.alert('Success', `Successfully edited ${item}`)
           setItem('')
           setDesc('')
           setPrice('')
+          setStore('')
 
           const updatedItems = items.map(i => (i.id === editItem.id ? editItem : i));
           await AsyncStorage.setItem('Items', JSON.stringify(updatedItems));
@@ -71,13 +75,9 @@ function AddItemForm({navigation, route}) {
    }
 
   const returnHome = () => {
-    if(item) {
-      Alert.alert('Warning', 'Do you want to save this item? Then click on "Add This Item Button first"')
-    } else {
-      navigation.goBack()
-    }
-    
-  }
+      navigation.goBack()    
+   }
+   
     return (
     
       <View style={styles.container}>
@@ -102,6 +102,12 @@ function AddItemForm({navigation, route}) {
             placeholder='Price'
             value={price}
             onChangeText={(value)=>setPrice(value)}
+            />
+          <TextInput 
+            style={styles.input}
+            placeholder='Store Name'
+            value={store}
+            onChangeText={(value)=>setStore(value)}
             />
 
         <View style={styles.addItemButton}>

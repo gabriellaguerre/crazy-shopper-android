@@ -5,7 +5,7 @@ function Splash({navigation}) {
     
     useEffect(()=>{
         setTimeout(()=>{
-            navigation.replace('HomeScreen')
+            navigation.replace('All Items List')
         },2500)
     },[])
     

@@ -1,7 +1,14 @@
 import React from 'react'
 import { StyleSheet, Text, View, } from 'react-native';
 
-function List() {
+function List({navigation, route}) {
+  const { item: thisItem } = route.params ? route.params: 0
+
+  console.log(thisItem, "THIS ITEM IN LIST")
+
+  // const shoppingItems = useSelector(selectAllShoppingItems)
+
+
  
     return (
        <View style={styles.main}>

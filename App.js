@@ -81,12 +81,12 @@ function HomeTabNavigator(){
           options={{ headerShown: false }}
          />
       <Stack.Screen 
-          name='HomeScreen'
+          name='All Items List'
           component={Home}
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
          />
         <Stack.Screen 
-          name='AddItemForm'
+          name='Item'
           component={AddItemForm}
           // options={{ headerShown: false }}
          />
