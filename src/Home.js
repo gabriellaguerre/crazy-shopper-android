@@ -25,7 +25,7 @@ function Home({navigation}) {
           const itemsArray = JSON.parse(jsonValue)
           if(Array.isArray(itemsArray)){
             itemsArray.forEach(obj => {
-          const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price };
+          const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store };
           dispatch(addItem(thisItem));
           });
           } else {
@@ -72,45 +72,28 @@ function Home({navigation}) {
     return (
      
        <View style={styles.body}>
-         {/* <Text style={styles.text}></Text> */}
-         <View style={styles.item_row}>
+        
          {items && items.length > 0 ? (
           <FlatList 
             data={items}
             renderItem={({ item }) => (
-              <TouchableOpacity 
-                    style={styles.item}
-                    onPress={()=>{navigateToAddItemForm(item)                
-                    }}
-                    >
-                <View style={styles.item_row}>
-                  <View style={styles.item_body}>
-                <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
-                <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-                <Text style={styles.subtitle}>${item.price}</Text>
-                <Text style={styles.subtitle}>{item.store}</Text>
-                <View style={styles.addToList}>
-                <Button 
-                  title='Add To Shopping List'
-                  color='green'
-                  onPress={()=>addToShoppingList(item.id, item.item)}
-                  />
-                  </View>
-                  
-                </View>
-                <View style={styles.delete}>
-                <TouchableOpacity
-                   onPress={()=> removeItem(item.id, item.item)}>
-                  <FontAwesome5 
-                    name={'trash'}
-                    size={25}
-                    color={'red'}
-                  />
+                <View style={styles.listContainer}>
+                  <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
+                  <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
+                  <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
+                {/* <View style={styles.addToList}> */}
+                  <View style={styles.buttonsContainer}>
+                <TouchableOpacity onPress={()=>addToShoppingList(item.id, item.item)}>
+                  <FontAwesome5 name={'plus'} size={25} color={'green'} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
+                  <FontAwesome5 name={'pen'} size={25} color={'blue'} />
+                </TouchableOpacity>              
+                <TouchableOpacity onPress={()=> removeItem(item.id, item.item)}>
+                  <FontAwesome5 name={'trash'} size={25} color={'red'} />
                 </TouchableOpacity>
                 </View>
-                </View>
-                
-              </TouchableOpacity>
+                </View>                
             )}
             keyExtractor={(item, index) => index.toString()}
            />
@@ -119,46 +102,31 @@ function Home({navigation}) {
           <View style={styles.empty}>
             <Text style={styles.emptyText}>THIS LIST IS EMPTY</Text>
           </View>
-         ) 
-         
-         }
-         </View>
-         <TouchableOpacity 
-          style={styles.button}
-          onPress={()=>{
-            navigation.navigate('Item')}}
-          >
-           <FontAwesome5 
-            name={'plus'}
-            size={20}
-            color={'white'}
-            />
-          </TouchableOpacity>
-          {/* <View style={styles.removeAll}>
-          <Button 
-            title='Delete ALL'
-            color='red'
-            borderRadius='30'
-            onPress={deleteList}
-          />
-          </View> */}
-        
+         )}
+     
+         <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Item')}} >
+           <FontAwesome5 name={'plus'} size={20} color={'white'}/>
+          </TouchableOpacity>        
       </View>      
     )
 }
 const styles = StyleSheet.create({
     body: {
       flex: 1,
-      alignItems:'center',
-      justifyContent: 'center',
-      backgroundColor: 'gray'
+      backgroundColor: 'gray',
     },
-    text: {
-      margin: 20,
-      fontSize: 20,
-      color: 'blue',
-      fontWeight: 'bold'
+    listContainer: {
+      marginHorizontal: 40,
+      width: '90%',
+      margin: 10,
+      alignSelf: 'center',
+      backgroundColor: 'white',
+      paddingLeft: 10,
+      paddingRight: 10,
+      borderRadius: 20,
     },
+
+/*****Add Item Round Blue Button */    
     button: {
       width: 60,
       height: 60,
@@ -171,63 +139,28 @@ const styles = StyleSheet.create({
       right: 10,
       elevation: 5,
     }, 
-    delete: {
-      width: 50,
-      height: 50,
-      justifyContent: 'center',
-      alignItems: 'center',
-      // marginRight: 10,
-    },
-    removeAll: {
-      width: 100,
-      height: 60,
-      
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'absolute',
-      left: 10,
-      bottom: 10,
-    },
-    item_row: {
+    buttonsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginTop: 20,
-    },
-    item_body: {
-      flex: 1,
-      justifyContent: 'center'
-    },
-    item: {
-      marginHorizontal: 10,
-      marginVertical: 7,
-      paddingLeft: 10,
-      marginTop: 10,
-      width: 'auto',
-      // height: 100,
-      backgroundColor: 'white',
-      justifyContent: 'center',
-      borderRadius: 10,
-      // elevation: 5, 
+      justifyContent: 'space-between',
+      margin: 10,
+     
     },
     title: {
       color: 'black',
       fontSize: 30,
       alignSelf: 'center',
-      // margin: 5,
     },
     subtitle: {
       color: 'gray',
       fontSize: 20,
-      // margin: 5,
     },
-    addToList: {
-      width: 200,
-      margin: 20,
-      alignSelf: 'center'
-    },
+   
+/**********When List is Empty*******/
     empty: {
       flex: 1,
       alignItems:'center',
+      justifyContent: 'center'
     },
     emptyText: {
       color: 'white',
