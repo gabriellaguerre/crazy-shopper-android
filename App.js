@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Home from './src/Home';
 import List from './src/List';
@@ -9,12 +9,14 @@ import Done from './src/Done';
 import AddItemForm from './src/AddItemForm';
 import Splash from './src/Splash';
 import { store } from './src/redux/store';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { selectAllLists } from './src/redux/listsSlice';
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
 
 function App() {
+   
   return (
     <Provider store={store}>
     <NavigationContainer>
@@ -26,7 +28,7 @@ function App() {
               iconName='home'
               size = focused ? 25 : 20
               color = focused ? 'blue' : 'black'
-            } else if(route.name==='List') {
+            } else if(route.name==='Shopping List') {
               iconName='list'
               size = focused ? 25 : 20
               color = focused ? 'blue' : 'black'
@@ -53,17 +55,15 @@ function App() {
           options={{ headerShown: false }}
         />
         <Tab.Screen 
-          name='List'
-          component={List}
-          options={{ tabBarBadge: 3,
-                    headerShown: false}}
+          name='Shopping List'
+          component={List} 
+          options={{ tabBarBadge: 2}}
           
         />
          <Tab.Screen 
           name='Done'
           component={Done}
-          options={{ tabBarBadge: 2,
-                     headerShown: false}}
+          options={{ tabBarBadge: 2}}
         />
     </Tab.Navigator>  
     </NavigationContainer>
@@ -91,10 +91,6 @@ function HomeTabNavigator(){
           // options={{ headerShown: false }}
          />
       </Stack.Navigator>
-
-   
-
-
   )
 }
 

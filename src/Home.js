@@ -3,13 +3,13 @@ import { StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList} from
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllItems, addItem, deleteAll, deleteItem } from './redux/itemsSlice';
+import { selectAllLists, addItemToList } from './redux/listsSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 
 
 function Home({navigation}) {
   const items = useSelector(selectAllItems)
+  const lists = useSelector(selectAllLists)
  
   const dispatch = useDispatch()
   
@@ -21,6 +21,7 @@ function Home({navigation}) {
     const getList = async () => {
       try {
          const jsonValue = await AsyncStorage.getItem('Items')
+        
          if(jsonValue !== null){
           const itemsArray = JSON.parse(jsonValue)
           if(Array.isArray(itemsArray)){
@@ -39,16 +40,7 @@ function Home({navigation}) {
       }
   
     }
-    // const deleteList = async () => {
-    //   try {
-    //   await AsyncStorage.clear()
-    //    .then(dispatch(deleteAll()))       
-    //     Alert.alert('Success', 'Successfully deleted all items')
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-     
-    // }
+    
 
     const removeItem = async (id, item) => {
       try {
@@ -65,8 +57,13 @@ function Home({navigation}) {
       navigation.navigate('Item', { item })
     }
 
-    const addToShoppingList = (id, item) => {
-      navigation.navigate('List', { item })
+    const addToShoppingList = async (id, item) => {
+        dispatch(addItemToList(item))
+              
+        const shoppingList = [...lists, item]
+        const jsonListValue = JSON.stringify(shoppingList)
+        await AsyncStorage.setItem('Lists', jsonListValue)
+       
     }
 
     return (
@@ -81,9 +78,9 @@ function Home({navigation}) {
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
                   <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
                   <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
-                {/* <View style={styles.addToList}> */}
+               
                   <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={()=>addToShoppingList(item.id, item.item)}>
+                <TouchableOpacity onPress={()=>addToShoppingList(item.id, item)}>
                   <FontAwesome5 name={'plus'} size={25} color={'green'} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
@@ -113,7 +110,7 @@ function Home({navigation}) {
 const styles = StyleSheet.create({
     body: {
       flex: 1,
-      backgroundColor: 'gray',
+      backgroundColor: '#C0C0C0',
     },
     listContainer: {
       marginHorizontal: 40,
@@ -124,6 +121,7 @@ const styles = StyleSheet.create({
       paddingLeft: 10,
       paddingRight: 10,
       borderRadius: 20,
+      elevation: 5,
     },
 
 /*****Add Item Round Blue Button */    
