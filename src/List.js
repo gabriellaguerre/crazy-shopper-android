@@ -37,8 +37,12 @@ function List() {
     }
 
   }
+  const deleteTheList = async () => {
+    const clean = dispatch(deleteList())
+    await AsyncStorage.setItem('Lists', JSON.stringify(clean))
+  }
 
-  console.log(shoppingLists, 'SHOPPING LIST')
+  // console.log(shoppingLists, 'SHOPPING LIST')
   
     return (
       <View style={styles.body}>
@@ -53,7 +57,7 @@ function List() {
                <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
          
                <View style={styles.buttonsContainer}>
-             <TouchableOpacity onPress={()=>{}}>
+             <TouchableOpacity onPress={()=>{deleteTheList()}}>
                <FontAwesome5 name={'check'} size={25} color={'green'} />
              </TouchableOpacity>
              {/* <TouchableOpacity onPress={()=>{}}>

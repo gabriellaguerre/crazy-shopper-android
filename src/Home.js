@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({navigation}) {
   const items = useSelector(selectAllItems)
+  console.log(items, "ITEMS IN HOME COMPONENT")
+
   const lists = useSelector(selectAllLists)
  
   const dispatch = useDispatch()
@@ -21,9 +23,10 @@ function Home({navigation}) {
     const getList = async () => {
       try {
          const jsonValue = await AsyncStorage.getItem('Items')
-        
+         console.log(jsonValue, 'JSON VALUE IN GET LIST HOME COMPONENT')
          if(jsonValue !== null){
           const itemsArray = JSON.parse(jsonValue)
+          // console.log(itemsArray,Array.isArray(itemsArray), 'ITEMS ARRAY')
           if(Array.isArray(itemsArray)){
             itemsArray.forEach(obj => {
           const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store };
@@ -42,11 +45,14 @@ function Home({navigation}) {
     }
     
 
-    const removeItem = async (id, item) => {
+    const removeItem = async (id) => {
       try {
-        const removeOne = dispatch(deleteItem({id}))
-        await AsyncStorage.setItem('Items', JSON.stringify(removeOne))     
-        Alert.alert('Success', `Successfully deleted ${item}`)
+        dispatch(deleteItem(id))
+        
+        const newList = items.filter(item=>item.id !== id)
+      
+        const jsonItemValue = JSON.stringify(newList)
+        await AsyncStorage.setItem('Items', jsonItemValue)     
       } catch (error) {
         console.log(error)
       }
@@ -57,14 +63,22 @@ function Home({navigation}) {
       navigation.navigate('Item', { item })
     }
 
-    const addToShoppingList = async (id, item) => {
+    const addToShoppingList = async (item) => {
+      try {
         dispatch(addItemToList(item))
-              
         const shoppingList = [...lists, item]
         const jsonListValue = JSON.stringify(shoppingList)
         await AsyncStorage.setItem('Lists', jsonListValue)
+      } catch (error) {
+        console.log(error)
+      }
+       
+
+     
+     
        
     }
+    
 
     return (
      
@@ -80,13 +94,13 @@ function Home({navigation}) {
                   <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
                
                   <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={()=>addToShoppingList(item.id, item)}>
+                <TouchableOpacity onPress={()=>{addToShoppingList(item); removeItem(item.id)}}>
                   <FontAwesome5 name={'plus'} size={25} color={'green'} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
                   <FontAwesome5 name={'pen'} size={25} color={'blue'} />
                 </TouchableOpacity>              
-                <TouchableOpacity onPress={()=> removeItem(item.id, item.item)}>
+                <TouchableOpacity onPress={()=> removeItem(item.id)}>
                   <FontAwesome5 name={'trash'} size={25} color={'red'} />
                 </TouchableOpacity>
                 </View>

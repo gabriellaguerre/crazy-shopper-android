@@ -12,10 +12,13 @@ import { store } from './src/redux/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { selectAllLists } from './src/redux/listsSlice';
 
+
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
 
 function App() {
+  // const lists = store.selectAllLists
+  // console.log(lists, "LIST IN APP COMPONENT")
    
   return (
     <Provider store={store}>
@@ -67,7 +70,7 @@ function App() {
         />
     </Tab.Navigator>  
     </NavigationContainer>
-    </Provider>
+     </Provider>
   );
 }
 
