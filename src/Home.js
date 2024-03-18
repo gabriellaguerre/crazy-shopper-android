@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList} from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllItems, addItem, deleteAll, deleteItem } from './redux/itemsSlice';
 import { selectAllLists, addItemToList } from './redux/listsSlice';
@@ -71,11 +71,7 @@ function Home({navigation}) {
         await AsyncStorage.setItem('Lists', jsonListValue)
       } catch (error) {
         console.log(error)
-      }
-       
-
-     
-     
+      }    
        
     }
     
@@ -111,7 +107,7 @@ function Home({navigation}) {
 
          ):(
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>CRAZY SHOPPER</Text>
+            <Text style={styles.emptyText}>Crazy Shopper</Text>
           </View>
          )}
      
