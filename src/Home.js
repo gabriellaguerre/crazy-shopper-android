@@ -111,7 +111,7 @@ function Home({navigation}) {
 
          ):(
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>THIS LIST IS EMPTY</Text>
+            <Text style={styles.emptyText}>CRAZY SHOPPER</Text>
           </View>
          )}
      
