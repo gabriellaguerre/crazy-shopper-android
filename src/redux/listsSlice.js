@@ -10,8 +10,8 @@ const listsSlice = createSlice({
             state.push(action.payload)
     },
        deleteItemFromList(state, action){
-            const {id} = action.payload 
-            return state.filter(list => list.id !== id);
+            const id = action.payload 
+            return state.filter(item => item.id !== id);
     },
     deleteList(state) {
         return initialState  

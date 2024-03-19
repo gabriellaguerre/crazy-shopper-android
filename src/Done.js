@@ -1,6 +1,6 @@
 import React , { useEffect } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
-import { selectAllDoneLists, deleteDoneList } from './redux/doneListsSlice';
+import { selectAllDoneLists, addItemToDoneList, deleteDoneList } from './redux/doneListsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -25,7 +25,7 @@ function DoneList() {
         if(Array.isArray(itemsArray)){
           itemsArray.forEach(obj => {
         const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store };
-        dispatch(addToDoneList(thisItem));
+        dispatch(addItemToDoneList(thisItem));
         });
         } else {
           console.error("Error loading items: Invalid data format")

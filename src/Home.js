@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({navigation}) {
   const items = useSelector(selectAllItems)
-  console.log(items, "ITEMS IN HOME COMPONENT")
+  // console.log(items, "ITEMS IN HOME COMPONENT")
 
   const lists = useSelector(selectAllLists)
  
@@ -23,7 +23,7 @@ function Home({navigation}) {
     const getList = async () => {
       try {
          const jsonValue = await AsyncStorage.getItem('Items')
-         console.log(jsonValue, 'JSON VALUE IN GET LIST HOME COMPONENT')
+        //  console.log(jsonValue, 'JSON VALUE IN GET LIST HOME COMPONENT')
          if(jsonValue !== null){
           const itemsArray = JSON.parse(jsonValue)
           // console.log(itemsArray,Array.isArray(itemsArray), 'ITEMS ARRAY')

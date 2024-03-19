@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { selectAllLists, addItemToList, deleteItemFromList, deleteList } from './redux/listsSlice';
-import { addItemToDoneList } from './redux/doneListsSlice';
+import { selectAllDoneLists, addItemToDoneList } from './redux/doneListsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 function List() {
   const shoppingLists = useSelector(selectAllLists)
+  const doneLists = useSelector(selectAllDoneLists)
   const dispatch = useDispatch()
 
   useEffect(()=>{
@@ -51,10 +52,12 @@ function List() {
   }
 
   const removeItemFromList = async (id) => {
+    
     try {
       dispatch(deleteItemFromList(id))
       
-      const newList = items.filter(item=>item.id !== id)
+      const newList = shoppingLists.filter(item=>item.id !== id)
+     
     
       const jsonItemValue = JSON.stringify(newList)
       await AsyncStorage.setItem('Lists', jsonItemValue)     
@@ -62,13 +65,8 @@ function List() {
       console.log(error)
     }
    
-  }
-
-
-
-
-
-  // console.log(shoppingLists, 'SHOPPING LIST')
+   }
+ 
   
     return (
       <View style={styles.body}>
@@ -83,7 +81,7 @@ function List() {
                <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
          
                <View style={styles.buttonsContainer}>
-             <TouchableOpacity onPress={()=>{addToDoneList(item); removeItemFromList(item.id)}}>
+             <TouchableOpacity onPress={()=>{ addToDoneList(item); removeItemFromList(item.id)}}>
                <FontAwesome5 name={'check'} size={25} color={'green'} />
              </TouchableOpacity>
              {/* <TouchableOpacity onPress={()=>{}}>

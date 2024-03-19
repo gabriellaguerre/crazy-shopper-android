@@ -22,9 +22,6 @@ const itemsSlice = createSlice({
         },
         deleteItem(state, action){
                 const id = action.payload 
-                console.log(id, 'IN SLICE')
-                console.log(state.filter(item => item.id !== id),"STATE IN SLICE")
-
                 return state.filter(item => item.id !== id);
 
         },
