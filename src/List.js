@@ -1,79 +1,94 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import { selectAllLists, addItemToList, deleteItemFromList, deleteList } from './redux/listsSlice';
 import { selectAllDoneLists, addItemToDoneList } from './redux/doneListsSlice';
+import { selectAllItems, updateItem } from './redux/itemsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 function List() {
-  const shoppingLists = useSelector(selectAllLists)
-  const doneLists = useSelector(selectAllDoneLists)
+  const items = useSelector(selectAllItems)
+  // const shoppingLists = useSelector(selectAllLists)
+  // const doneLists = useSelector(selectAllDoneLists)
   const dispatch = useDispatch()
 
-  useEffect(()=>{
-    dispatch(deleteList());
-    getShoppingList()
-  },[])
+  // useEffect(()=>{
+  //   dispatch(deleteList());
+  //   getShoppingList()
+  // },[])
 
-  const getShoppingList = async () => {
-    try {
-       const jsonValue = await AsyncStorage.getItem('Lists')
+  // const getShoppingList = async () => {
+  //   try {
+  //      const jsonValue = await AsyncStorage.getItem('Lists')
       
-       if(jsonValue !== null){
-        const itemsArray = JSON.parse(jsonValue)
-        if(Array.isArray(itemsArray)){
-          itemsArray.forEach(obj => {
-        const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store };
-        dispatch(addItemToList(thisItem));
-        });
-        } else {
-          console.error("Error loading items: Invalid data format")
-        }
+  //      if(jsonValue !== null){
+  //       const itemsArray = JSON.parse(jsonValue)
+  //       if(Array.isArray(itemsArray)){
+  //         itemsArray.forEach(obj => {
+  //       const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store };
+  //       dispatch(addItemToList(thisItem));
+  //       });
+  //       } else {
+  //         console.error("Error loading items: Invalid data format")
+  //       }
         
-       }
-    } catch (error) {
-      console.error('Error loading items:', error)
+  //      }
+  //   } catch (error) {
+  //     console.error('Error loading items:', error)
       
-    }
+  //   }
 
-  }
+  // }
 
 
   const addToDoneList = async (item) => {
     try {
-      dispatch(addItemToDoneList(item))
-      const shoppingList = [...doneLists, item]
-      const jsonListValue = JSON.stringify(shoppingList)
-      await AsyncStorage.setItem('Done', jsonListValue)
-    } catch (error) {
-      console.log(error)
-    }  
-  }
+      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: false, isList: false, isDone: true}
+      dispatch(updateItem(editItem))
+      const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
+      console.log(updatedItems, 'UPDATED ITEMS')
+      const jsonItemValue = JSON.stringify(updatedItems)
+      await AsyncStorage.setItem('Items', jsonItemValue)
 
-  const removeItemFromList = async (id) => {
+
+    // try {
+    //   dispatch(addItemToDoneList(item))
+    //   const shoppingList = [...doneLists, item]
+    //   const jsonListValue = JSON.stringify(shoppingList)
+    //   await AsyncStorage.setItem('Done', jsonListValue)
+    // } catch (error) {
+    //   console.log(error)
+    // }  
+  } catch (error) {
+    console.log(error)
+  }    
+   
+}
+  // removeItemFromList(item.id)
+  // const removeItemFromList = async (id) => {
     
-    try {
-      dispatch(deleteItemFromList(id))
+  //   try {
+  //     dispatch(deleteItemFromList(id))
       
-      const newList = shoppingLists.filter(item=>item.id !== id)
+  //     const newList = shoppingLists.filter(item=>item.id !== id)
      
     
-      const jsonItemValue = JSON.stringify(newList)
-      await AsyncStorage.setItem('Lists', jsonItemValue)     
-    } catch (error) {
-      console.log(error)
-    }
+  //     const jsonItemValue = JSON.stringify(newList)
+  //     await AsyncStorage.setItem('Lists', jsonItemValue)     
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
    
-   }
- 
+  //  }
+  const newItems = items.filter(item=> item.isList === true)
   
     return (
       <View style={styles.body}>
         
-      {shoppingLists && shoppingLists.length > 0 ? (
+      {newItems && newItems.length > 0 ? (
        <FlatList 
-         data={shoppingLists}
+         data={newItems}
          renderItem={({ item }) => (
              <View style={styles.listContainer}>
                <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
@@ -81,7 +96,7 @@ function List() {
                <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
          
                <View style={styles.buttonsContainer}>
-             <TouchableOpacity onPress={()=>{ addToDoneList(item); removeItemFromList(item.id)}}>
+             <TouchableOpacity onPress={()=>{ addToDoneList(item); }}>
                <FontAwesome5 name={'check'} size={25} color={'green'} />
              </TouchableOpacity>
              {/* <TouchableOpacity onPress={()=>{}}>
@@ -97,9 +112,13 @@ function List() {
         />
 
       ):(
-       <View style={styles.empty}>
-         <Text style={styles.emptyText}>Crazy Shopper</Text>
-       </View>
+        <View style={styles.imageBody}>
+        <Image 
+          style={styles.logo}
+          source={require('./assets/crazy_shopper.png')}
+        />
+        {/* <Text style={styles.text}> Crazy Shopper </Text> */}
+      </View>
       )}
   
          
@@ -109,7 +128,7 @@ function List() {
 const styles = StyleSheet.create({
  body: {
    flex: 1,
-   backgroundColor: '#000080',
+   backgroundColor: '#4169E1',
  },
  listContainer: {
    marginHorizontal: 40,
@@ -162,8 +181,24 @@ const styles = StyleSheet.create({
  emptyText: {
    color: 'white',
    fontSize: 40,
-   
- }
+ },
+ text: {
+  fontSize: 30,
+  fontWeight: 'bold',
+  fontStyle: 'italic',
+  color: 'white',
+},
+logo: {
+  width: 200,
+  height: 150,
+  margin: 20,
+},
+imageBody: {
+  flex: 1,
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '#4169E1'
+},
  
 });
 

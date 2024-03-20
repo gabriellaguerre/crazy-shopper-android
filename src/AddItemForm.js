@@ -17,6 +17,9 @@ function AddItemForm({navigation, route}) {
   const [desc, setDesc] = useState(thisitem ? thisitem.desc : '')
   const [price, setPrice] = useState(thisitem ? thisitem.price.toString() : '')
   const [store, setStore] = useState(thisitem ? thisitem.store : '')
+  const [isItem, setIsItem] = useState(thisitem ? thisitem.isItem : true)
+  const [isList, setIsList] = useState(thisitem ? thisitem.isList : false)
+  const [isDone, setIsDone] = useState(thisitem ? thisitem.isDone : false)
 
   useEffect(()=>{
     if(thisitem) {
@@ -30,13 +33,16 @@ function AddItemForm({navigation, route}) {
   const createItem = async () => {
     try {
       if(item && desc && price && store) {
-        const newItem = {id: nanoid(), item: item, desc: desc, price: price, store: store}
+        const newItem = {id: nanoid(), item: item, desc: desc, price: price, store: store, isItem: isItem, isList: isList, isDone: isDone}
         dispatch(addItem(newItem))
         Alert.alert('Success', `Successfully added ${item}`)
         setItem('')
         setDesc('')
         setPrice('')
         setStore('')
+        setIsItem(true)
+        setIsList(false)
+        setIsDone(false)
      
         const itemsList = [...items, newItem]
         const jsonValue = JSON.stringify(itemsList)
