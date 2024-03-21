@@ -70,7 +70,7 @@ function DoneList({navigation}) {
     //   }));
     
   }
-  const newItems = items.filter(item => item.isDone === true)
+  const newItems = items.filter(item => item.isDone === true).sort((a, b) => a.item.localeCompare(b.item));
 
   return (
     <View style={styles.body}>

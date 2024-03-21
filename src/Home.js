@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList, Image} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
@@ -109,7 +109,7 @@ function Home({navigation}) {
        
     }
 
-    const newItems = items.filter(item=> item.isItem === true)
+    const newItems = items.filter(item=> item.isItem === true).sort((a, b) => a.item.localeCompare(b.item));
     console.log(newItems, "NEW ITEMS")
     
 
@@ -143,9 +143,12 @@ function Home({navigation}) {
            />
 
          ):(
-          <View style={styles.empty}>
-            <Text style={styles.emptyText}>Crazy Shopper</Text>
-          </View>
+          <View style={styles.imageBody}>
+        <Image 
+          style={styles.logo}
+          source={require('./assets/crazy_shopper.png')}
+        />
+      </View>
          )}
      
          <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Item')}} >
@@ -210,7 +213,17 @@ const styles = StyleSheet.create({
     emptyText: {
       color: 'white',
       fontSize: 40,
-    }
+    },
+    logo: {
+      width: 200,
+      height: 150,
+      margin: 20,
+    },
+    imageBody: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     
   });
 

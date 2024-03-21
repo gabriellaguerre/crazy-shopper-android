@@ -1,91 +1,50 @@
 import React, { useEffect } from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
-import { selectAllLists, addItemToList, deleteItemFromList, deleteList } from './redux/listsSlice';
-import { selectAllDoneLists, addItemToDoneList } from './redux/doneListsSlice';
 import { selectAllItems, updateItem } from './redux/itemsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
+
 function List() {
   const items = useSelector(selectAllItems)
-  // const shoppingLists = useSelector(selectAllLists)
-  // const doneLists = useSelector(selectAllDoneLists)
   const dispatch = useDispatch()
 
-  // useEffect(()=>{
-  //   dispatch(deleteList());
-  //   getShoppingList()
-  // },[])
-
-  // const getShoppingList = async () => {
-  //   try {
-  //      const jsonValue = await AsyncStorage.getItem('Lists')
-      
-  //      if(jsonValue !== null){
-  //       const itemsArray = JSON.parse(jsonValue)
-  //       if(Array.isArray(itemsArray)){
-  //         itemsArray.forEach(obj => {
-  //       const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store };
-  //       dispatch(addItemToList(thisItem));
-  //       });
-  //       } else {
-  //         console.error("Error loading items: Invalid data format")
-  //       }
-        
-  //      }
-  //   } catch (error) {
-  //     console.error('Error loading items:', error)
-      
-  //   }
-
-  // }
-
-
+  
   const addToDoneList = async (item) => {
     try {
       const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: false, isList: false, isDone: true}
       dispatch(updateItem(editItem))
       const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
-      console.log(updatedItems, 'UPDATED ITEMS')
       const jsonItemValue = JSON.stringify(updatedItems)
       await AsyncStorage.setItem('Items', jsonItemValue)
 
-
-    // try {
-    //   dispatch(addItemToDoneList(item))
-    //   const shoppingList = [...doneLists, item]
-    //   const jsonListValue = JSON.stringify(shoppingList)
-    //   await AsyncStorage.setItem('Done', jsonListValue)
-    // } catch (error) {
-    //   console.log(error)
-    // }  
   } catch (error) {
     console.log(error)
   }    
    
 }
-  // removeItemFromList(item.id)
-  // const removeItemFromList = async (id) => {
-    
-  //   try {
-  //     dispatch(deleteItemFromList(id))
-      
-  //     const newList = shoppingLists.filter(item=>item.id !== id)
-     
-    
-  //     const jsonItemValue = JSON.stringify(newList)
-  //     await AsyncStorage.setItem('Lists', jsonItemValue)     
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-   
-  //  }
-  const newItems = items.filter(item=> item.isList === true)
+const returnItem = async (item) => {
+  try {
+    const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: true, isList: false, isDone: false}
+    dispatch(updateItem(editItem))
+    const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
+    const jsonItemValue = JSON.stringify(updatedItems)
+    await AsyncStorage.setItem('Items', jsonItemValue)
+
+} catch (error) {
+  console.log(error)
+}    
+ 
+}
+  
+  const newItems = items.filter(item=> item.isList === true).sort((a, b) => a.item.localeCompare(b.item));
   
     return (
+      <>
+     
       <View style={styles.body}>
-        
+   
       {newItems && newItems.length > 0 ? (
        <FlatList 
          data={newItems}
@@ -96,13 +55,15 @@ function List() {
                <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
          
                <View style={styles.buttonsContainer}>
+               <TouchableOpacity onPress={()=>{ returnItem(item)}}>
+                   <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
+               </TouchableOpacity>
+
              <TouchableOpacity onPress={()=>{ addToDoneList(item); }}>
                <FontAwesome5 name={'check'} size={25} color={'green'} />
              </TouchableOpacity>
-             {/* <TouchableOpacity onPress={()=>{}}>
-               <FontAwesome5 name={'pen'} size={25} color={'blue'} />
-             </TouchableOpacity>              
-             <TouchableOpacity onPress={()=> {}}>
+                          
+             {/* <TouchableOpacity onPress={()=> {}}>
                <FontAwesome5 name={'trash'} size={25} color={'red'} />
              </TouchableOpacity> */}
              </View>
@@ -117,12 +78,12 @@ function List() {
           style={styles.logo}
           source={require('./assets/crazy_shopper.png')}
         />
-        {/* <Text style={styles.text}> Crazy Shopper </Text> */}
       </View>
       )}
   
          
    </View>      
+   </>
  )
 }
 const styles = StyleSheet.create({
@@ -158,7 +119,7 @@ const styles = StyleSheet.create({
  buttonsContainer: {
    flexDirection: 'row',
    alignItems: 'center',
-   justifyContent: 'center',
+   justifyContent: 'space-between',
    margin: 10,
   
  },

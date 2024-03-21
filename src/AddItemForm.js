@@ -35,7 +35,7 @@ function AddItemForm({navigation, route}) {
       if(item && desc && price && store) {
         const newItem = {id: nanoid(), item: item, desc: desc, price: price, store: store, isItem: isItem, isList: isList, isDone: isDone}
         dispatch(addItem(newItem))
-        Alert.alert('Success', `Successfully added ${item}`)
+        // Alert.alert('Success', `Successfully added ${item}`)
         setItem('')
         setDesc('')
         setPrice('')
@@ -43,7 +43,7 @@ function AddItemForm({navigation, route}) {
         setIsItem(true)
         setIsList(false)
         setIsDone(false)
-     
+        navigation.navigate("All Items List")
         const itemsList = [...items, newItem]
         const jsonValue = JSON.stringify(itemsList)
         await AsyncStorage.setItem('Items', jsonValue)
@@ -58,7 +58,7 @@ function AddItemForm({navigation, route}) {
   const editItem = async () => {
     try {
         if(item && desc && price && store) {
-          const editItem = {id: thisitem.id, item, desc, price, store}
+          const editItem = {id: thisitem.id, item, desc, price, store, isItem, isList, isDone}
           dispatch(updateItem(editItem))
           navigation.goBack()
           Alert.alert('Success', `Successfully edited ${item}`)
@@ -133,11 +133,11 @@ function AddItemForm({navigation, route}) {
             )}
          
         </View>
-        {!thisitem && 
+        {/* {!thisitem && 
         <Button 
           title='Done'
           onPress={returnHome}/>
-        }
+        } */}
       </View>
      
       
