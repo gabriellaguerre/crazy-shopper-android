@@ -2,13 +2,7 @@ import React, { useEffect } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
 function Splash({navigation}) {
-    
-    useEffect(()=>{
-        setTimeout(()=>{
-            navigation.replace('All Items List')
-        },2500)
-    },[])
-    
+        
     return (
       <View style={styles.body}>
         <Image 

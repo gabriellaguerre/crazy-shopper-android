@@ -8,21 +8,37 @@ import List from './src/List';
 import Done from './src/Done';
 import AddItemForm from './src/AddItemForm';
 import Splash from './src/Splash';
-import { store } from './src/redux/store';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import { selectAllLists } from './src/redux/listsSlice';
+import { selectAllItems } from './src/redux/itemsSlice';
+import { useSelector } from 'react-redux';
+
 
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
 
 function App() {
-  // const lists = store.selectAllLists
-  // console.log(lists, "LIST IN APP COMPONENT")
+  const shoppingItems = useSelector(selectAllItems)
+  const shoppingList = shoppingItems.filter(item=> item.isList === true)
+  const doneList = shoppingItems.filter(item => item.isDone === true)
+
+  const [isSplash, setIsSplash] = useState(true);
+ 
+  useEffect(()=>{
+    setTimeout(() => {
+      setIsSplash(false);
+    }, 2500);
+  },[])
    
   return (
-    <Provider store={store}>
+    // <Provider store={store}>
     <NavigationContainer>
+      {isSplash ? (
+         <Stack.Navigator>
+         <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }} />
+       </Stack.Navigator>
+      ):(
+
+     
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({focused, size, color, r}) => {
@@ -51,6 +67,7 @@ function App() {
           tabBarShowLabel: false,
         }
         )}
+        
       >
         <Tab.Screen 
           name='Home'
@@ -60,17 +77,18 @@ function App() {
         <Tab.Screen 
           name='Shopping List'
           component={List} 
-          options={{ tabBarBadge: 2}}
+          options={{ tabBarBadge: shoppingList.length ? shoppingList.length :  null}}
           
         />
          <Tab.Screen 
           name='Done'
           component={Done}
-          options={{ tabBarBadge: 2}}
+          options={{ tabBarBadge: doneList.length ? doneList.length :  null}}
         />
     </Tab.Navigator>  
+      )}
     </NavigationContainer>
-     </Provider>
+    //  </Provider>
   );
 }
 
@@ -78,11 +96,13 @@ function HomeTabNavigator(){
   return(
    
       <Stack.Navigator>
-         <Stack.Screen 
+         {/* <Stack.Screen 
           name='Splash'
           component={Splash}
-          options={{ headerShown: false }}
-         />
+          options={{ headerShown: false,
+                     tabBarVisible: false,
+          }}
+         /> */}
       <Stack.Screen 
           name='All Items List'
           component={Home}
