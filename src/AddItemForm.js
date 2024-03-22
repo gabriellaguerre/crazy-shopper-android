@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Text, StyleSheet, View, TextInput, Button, Alert } from 'react-native'
+import { Text, StyleSheet, View, TextInput, Button, Alert, TouchableOpacity } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, updateItem, selectAllItems } from './redux/itemsSlice';
 import { nanoid } from '@reduxjs/toolkit';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 
 
@@ -15,7 +16,7 @@ function AddItemForm({navigation, route}) {
 
   const [item, setItem] = useState(thisitem ? thisitem.item : '')
   const [desc, setDesc] = useState(thisitem ? thisitem.desc : '')
-  const [price, setPrice] = useState(thisitem ? thisitem.price.toString() : '')
+  // const [price, setPrice] = useState(thisitem ? thisitem.price : 0)
   const [store, setStore] = useState(thisitem ? thisitem.store : '')
   const [isItem, setIsItem] = useState(thisitem ? thisitem.isItem : true)
   const [isList, setIsList] = useState(thisitem ? thisitem.isList : false)
@@ -25,20 +26,20 @@ function AddItemForm({navigation, route}) {
     if(thisitem) {
       setItem(thisitem.item);
       setDesc(thisitem.desc);
-      setPrice(thisitem.price.toString());
+      // setPrice(thisitem.price);
       setStore(thisitem.store)
     }
   },[thisitem])
 
   const createItem = async () => {
     try {
-      if(item && desc && price && store) {
-        const newItem = {id: nanoid(), item: item, desc: desc, price: price, store: store, isItem: isItem, isList: isList, isDone: isDone}
+      if(item) {
+        const newItem = {id: nanoid(), item: item, desc: desc, store: store, isItem: isItem, isList: isList, isDone: isDone}
         dispatch(addItem(newItem))
-        // Alert.alert('Success', `Successfully added ${item}`)
+        Alert.alert('Success', `Successfully added ${item}`)
         setItem('')
         setDesc('')
-        setPrice('')
+        // setPrice('')
         setStore('')
         setIsItem(true)
         setIsList(false)
@@ -57,14 +58,14 @@ function AddItemForm({navigation, route}) {
 
   const editItem = async () => {
     try {
-        if(item && desc && price && store) {
-          const editItem = {id: thisitem.id, item, desc, price, store, isItem, isList, isDone}
+        if(item) {
+          const editItem = {id: thisitem.id, item, desc, store, isItem, isList, isDone}
           dispatch(updateItem(editItem))
           navigation.goBack()
           Alert.alert('Success', `Successfully edited ${item}`)
           setItem('')
           setDesc('')
-          setPrice('')
+          // setPrice('')
           setStore('')
 
           const updatedItems = items.map(i => (i.id === editItem.id ? editItem : i));
@@ -103,33 +104,31 @@ function AddItemForm({navigation, route}) {
             multiline
             />
 
-        <TextInput 
-            style={styles.input}
-            placeholder='Price'
-            value={price}
-            onChangeText={(value)=>setPrice(value)}
-            />
-          <TextInput 
+         <TextInput 
             style={styles.input}
             placeholder='Store Name'
             value={store}
             onChangeText={(value)=>setStore(value)}
             />
 
-        <View style={styles.addItemButton}>
+        {/* <TextInput 
+            style={styles.input}
+            placeholder='Price'
+            value={price}
+            onChangeText={(value)=>setPrice(value)}
+            keyboardType='numeric'
+            /> */}
+         
+
+        <View>
           {!thisitem ? (
-          <Button 
-               title='Add Item to List'
-               color='green'
-              //  onChangeText={(value)=>setItemName(value)}
-               onPress={createItem}/>
+          <TouchableOpacity style={styles.addButton} onPress={createItem}>
+              <Text style={styles.addText}>+ Add To Items List</Text>
+           </TouchableOpacity >
           ):(
-          <Button 
-            title='Update Item'
-            color='blue'
-            // onChangeText={(value)=>setItemName(value)}
-            onPress={editItem}
-            />
+          <TouchableOpacity  style={styles.editButton}  onPress={editItem}>  
+            <Text style={styles.editText}>Edit This Item</Text>
+            </TouchableOpacity>
             )}
          
         </View>
@@ -162,11 +161,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   addItemButton: {
-    width: '100%',
-    // height: 50,
-    margin: 10,
-    
-
+    borderRadius: 30,
+    margin: 15,
+    backgroundColor: 'green',   
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  editText: {
+    fontSize: 20,
+    color: 'white',
+    margin: 15,
+    fontWeight: 'bold',
+  },
+  editButton: {
+    backgroundColor: '#000080', 
+    borderRadius: 20, 
+    margin: 20,
+  },
+  addText: {
+    fontSize: 20,
+    color: 'white',
+    margin: 15,
+    fontWeight: 'bold',
+  },
+  addButton: {
+    backgroundColor: 'blue', 
+    borderRadius: 20, 
+    margin: 20,
   }
 })
 

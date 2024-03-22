@@ -3,16 +3,12 @@ import { StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList, Imag
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
-import { selectAllLists, addItemToList } from './redux/listsSlice';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function Home({navigation}) {
   const items = useSelector(selectAllItems)
- 
-
-  const lists = useSelector(selectAllLists)
- 
   const dispatch = useDispatch()
 
  
@@ -124,14 +120,14 @@ function Home({navigation}) {
                 <View style={styles.listContainer}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
                   <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-                  <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
+                  <Text style={styles.subtitle}>{item.store}</Text>
                
                   <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>
-                  <FontAwesome5 name={'plus'} size={25} color={'green'} />
+                  <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
-                  <FontAwesome5 name={'pen'} size={25} color={'blue'} />
+                  <FontAwesome5 name={'pen'} size={25} color={'#000080'} />
                 </TouchableOpacity>              
                 <TouchableOpacity onPress={()=> removeItem(item.id)}>
                   <FontAwesome5 name={'trash'} size={25} color={'red'} />
@@ -151,9 +147,9 @@ function Home({navigation}) {
       </View>
          )}
      
-         <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Item')}} >
+         {/* <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Item')}} >
            <FontAwesome5 name={'plus'} size={20} color={'white'}/>
-          </TouchableOpacity>        
+          </TouchableOpacity>         */}
       </View>      
     )
 }
@@ -183,9 +179,10 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       position: 'absolute',
-      bottom: 10,
+      // bottom: 55,
       right: 10,
       elevation: 5,
+      top: 10,
     }, 
     buttonsContainer: {
       flexDirection: 'row',
