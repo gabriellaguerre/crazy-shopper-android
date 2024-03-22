@@ -123,7 +123,7 @@ function AddItemForm({navigation, route}) {
         <View>
           {!thisitem ? (
           <TouchableOpacity style={styles.addButton} onPress={createItem}>
-              <Text style={styles.addText}>+ Add to Items List</Text>
+              <Text style={styles.addText}>+ Add To Items List</Text>
            </TouchableOpacity >
           ):(
           <TouchableOpacity  style={styles.editButton}  onPress={editItem}>  
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   editButton: {
-    backgroundColor: 'blue', 
+    backgroundColor: '#000080', 
     borderRadius: 20, 
     margin: 20,
   },
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addButton: {
-    backgroundColor: 'green', 
+    backgroundColor: 'blue', 
     borderRadius: 20, 
     margin: 20,
   }

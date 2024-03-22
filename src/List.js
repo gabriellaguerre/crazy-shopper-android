@@ -38,7 +38,15 @@ const returnItem = async (item) => {
  
 }
   
-  const newItems = items.filter(item=> item.isList === true).sort((a, b) => a.item.localeCompare(b.item));
+  const newItems = items.filter(item=> item.isList === true)
+                        .sort((a, b) => {
+                          const storeComparison = a.store.localeCompare(b.store);
+                          if(storeComparison !== 0) {
+                            return storeComparison
+                          }
+                          return a.item.localeCompare(b.item);
+                        })
+
   
     return (
       <>
