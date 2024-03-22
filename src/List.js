@@ -52,7 +52,7 @@ const returnItem = async (item) => {
              <View style={styles.listContainer}>
                <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
                <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-               <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
+               <Text style={styles.subtitle}>{item.store}</Text>
          
                <View style={styles.buttonsContainer}>
                <TouchableOpacity onPress={()=>{ returnItem(item)}}>

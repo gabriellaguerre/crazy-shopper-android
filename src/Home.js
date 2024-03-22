@@ -124,11 +124,11 @@ function Home({navigation}) {
                 <View style={styles.listContainer}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
                   <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-                  <Text style={styles.subtitle}>${item.price} at {item.store}</Text>
+                  <Text style={styles.subtitle}>{item.store}</Text>
                
                   <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>
-                  <FontAwesome5 name={'plus'} size={25} color={'green'} />
+                  <FontAwesome5 name={'cart-plus'} size={25} color={'green'} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
                   <FontAwesome5 name={'pen'} size={25} color={'blue'} />
@@ -183,9 +183,10 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       position: 'absolute',
-      bottom: 10,
+      // bottom: 55,
       right: 10,
       elevation: 5,
+      top: 10,
     }, 
     buttonsContainer: {
       flexDirection: 'row',
