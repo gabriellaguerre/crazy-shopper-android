@@ -17,7 +17,7 @@ import { TouchableOpacity, StyleSheet, View } from 'react-native';
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
 
-function App({navigation}) {
+function App() {
   const shoppingItems = useSelector(selectAllItems)
   const shoppingList = shoppingItems.filter(item=> item.isList === true)
   const doneList = shoppingItems.filter(item => item.isDone === true)
@@ -32,7 +32,7 @@ function App({navigation}) {
 
     
   return (
-    // <Provider store={store}>
+ 
     <NavigationContainer>
       {isSplash ? (
          <Stack.Navigator>
@@ -101,7 +101,7 @@ function App({navigation}) {
     </Tab.Navigator>  
       )}
     </NavigationContainer>
-    //  </Provider>
+ 
   );
 }
 
@@ -110,13 +110,7 @@ function HomeTabNavigator(){
   return(
    
       <Stack.Navigator>
-         {/* <Stack.Screen 
-          name='Splash'
-          component={Splash}
-          options={{ headerShown: false,
-                     tabBarVisible: false,
-          }}
-         /> */}
+     
       <Stack.Screen 
           name='All Items List'
           component={Home}
@@ -133,7 +127,7 @@ function HomeTabNavigator(){
         <Stack.Screen 
           name='Item'
           component={AddItemForm}
-          // options={{ headerShown: false }}
+          
          />
       </Stack.Navigator>
   )
