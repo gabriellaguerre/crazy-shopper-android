@@ -1,6 +1,5 @@
-import React , { useEffect } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
-import { selectAllDoneLists, addItemToDoneList, deleteDoneList } from './redux/doneListsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -8,42 +7,7 @@ import { selectAllItems, updateItem } from './redux/itemsSlice';
 
 function DoneList({navigation}) {
   const items = useSelector(selectAllItems)
-  // const doneLists = useSelector(selectAllDoneLists)
   const dispatch = useDispatch()
-
-  // useEffect(()=>{
-  //   dispatch(deleteDoneList());
-  //   getDoneList()
-  // },[])
-
-  // const getDoneList = async () => {
-  //   try {
-  //      const jsonValue = await AsyncStorage.getItem('Done')
-      
-  //      if(jsonValue !== null){
-  //       const itemsArray = JSON.parse(jsonValue)
-  //       if(Array.isArray(itemsArray)){
-  //         itemsArray.forEach(obj => {
-  //       const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store };
-  //       dispatch(addItemToDoneList(thisItem));
-  //       });
-  //       } else {
-  //         console.error("Error loading items: Invalid data format")
-  //       }
-        
-  //      }
-  //   } catch (error) {
-  //     console.error('Error loading items:', error)
-      
-  //   }
-
-  // }
-
-  // const deleteTheDoneList = async () =>{
-  //   const clean = dispatch(deleteDoneList())
-  //   await AsyncStorage.setItem('Done', JSON.stringify(clean))
-
-  // }
 
   const resetItemsList = async () => {
     const renewItems = items.filter(item => item.isDone === true)
@@ -54,19 +18,7 @@ function DoneList({navigation}) {
       const jsonItemValue = JSON.stringify(updatedItems)
       await AsyncStorage.setItem('Items', jsonItemValue)
     })
-    // const jsonValue = await AsyncStorage.getItem('Done')
-
-    // if(jsonValue !== null){
-    //   const itemsArray = JSON.parse(jsonValue)
-    //   if(Array.isArray(itemsArray)){
-    //     await Promise.all(itemsArray.forEach(async obj => {
-    //       const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store };
-    //       dispatch(addItem(thisItem));
-    //       const renewItems = [...items, thisItem]
-    //       const jsonListValue = JSON.stringify(renewItems)
-    //       await AsyncStorage.setItem('Items', jsonListValue)
-          
-    //   }));
+    
     
   }
   const newItems = items.filter(item => item.isDone === true).sort((a, b) => a.item.localeCompare(b.item));
@@ -84,13 +36,6 @@ function DoneList({navigation}) {
              <Text style={styles.subtitle}>{item.store}</Text>
        
              <View style={styles.buttonsContainer}>
-           {/* <TouchableOpacity onPress={}>
-             <FontAwesome5 name={'check'} size={25} color={'green'} />
-           </TouchableOpacity> */}
-                      
-           {/* <TouchableOpacity onPress={()=> {}}>
-             <FontAwesome5 name={'trash'} size={25} color={'red'} />
-           </TouchableOpacity> */}
            </View>
            </View>                
        )}
@@ -103,7 +48,7 @@ function DoneList({navigation}) {
         style={styles.logo}
         source={require('./assets/crazy_shopper.png')}
       />
-      {/* <Text style={styles.text}> Crazy Shopper </Text> */}
+   
     </View>
     )}
      <TouchableOpacity style={styles.button} onPress={async()=>{await resetItemsList().then(navigation.navigate('Home'))}}>

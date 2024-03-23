@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import { selectAllItems, updateItem } from './redux/itemsSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -70,10 +70,6 @@ const returnItem = async (item) => {
              <TouchableOpacity onPress={()=>{ addToDoneList(item); }}>
                <FontAwesome5 name={'check'} size={25} color={'green'} />
              </TouchableOpacity>
-                          
-             {/* <TouchableOpacity onPress={()=> {}}>
-               <FontAwesome5 name={'trash'} size={25} color={'red'} />
-             </TouchableOpacity> */}
              </View>
              </View>                
          )}

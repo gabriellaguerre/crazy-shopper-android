@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, updateItem, selectAllItems } from './redux/itemsSlice';
 import { nanoid } from '@reduxjs/toolkit';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
 
 
 
@@ -111,15 +111,6 @@ function AddItemForm({navigation, route}) {
             onChangeText={(value)=>setStore(value)}
             />
 
-        {/* <TextInput 
-            style={styles.input}
-            placeholder='Price'
-            value={price}
-            onChangeText={(value)=>setPrice(value)}
-            keyboardType='numeric'
-            /> */}
-         
-
         <View>
           {!thisitem ? (
           <TouchableOpacity style={styles.addButton} onPress={createItem}>
@@ -132,11 +123,6 @@ function AddItemForm({navigation, route}) {
             )}
          
         </View>
-        {/* {!thisitem && 
-        <Button 
-          title='Done'
-          onPress={returnHome}/>
-        } */}
       </View>
      
       

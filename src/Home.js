@@ -57,51 +57,22 @@ function Home({navigation}) {
       }
      
     }
-  //****************************END REMOVE ITEM************************** */
-
+ 
     const navigateToAddItemForm = (item) => {
       navigation.navigate('Item', { item })
     }
-//**********************************EDITING AN ITEM*********************************** */
-    // const editItem = async () => {
-    //   try {
-    //       if(item && desc && price && store) {
-    //         const editItem = {id: thisitem.id, item, desc, price, store}
-    //         dispatch(updateItem(editItem))
-    //         navigation.goBack()
-    //         Alert.alert('Success', `Successfully edited ${item}`)
-    //         setItem('')
-    //         setDesc('')
-    //         setPrice('')
-    //         setStore('')
-  
-    //         const updatedItems = items.map(i => (i.id === editItem.id ? editItem : i));
-    //         await AsyncStorage.setItem('Items', JSON.stringify(updatedItems));
-    //       } else {
-    //         Alert.alert('Warning', 'Please enter all item details');
-    //         await AsyncStorage.setItem('Items', jsonValue)
-            
-    //       } 
-  
-    //   }catch (error) {
-    //     console.log(error)
-    //   }
-    //  }
-//**************************************END EDITING**************************************** */
+
    
     const addToShoppingList = async (item) => {
       try {
         const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: false, isList: true, isDone: false}
         dispatch(updateItem(editItem))
         const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
-        console.log(updatedItems, 'UPDATED ITEMS')
+        
         const jsonItemValue = JSON.stringify(updatedItems)
         await AsyncStorage.setItem('Items', jsonItemValue)
         
-        // dispatch(addItemToList(item))
-        // const shoppingList = [...lists, item]
-        // const jsonListValue = JSON.stringify(shoppingList)
-        // await AsyncStorage.setItem('Lists', jsonListValue)
+    
       } catch (error) {
         console.log(error)
       }    
@@ -109,7 +80,7 @@ function Home({navigation}) {
     }
 
     const newItems = items.filter(item=> item.isItem === true).sort((a, b) => a.item.localeCompare(b.item));
-    console.log(newItems, "NEW ITEMS")
+    
     
 
     return (
@@ -166,9 +137,6 @@ function Home({navigation}) {
       </View>
          )}
      
-         {/* <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Item')}} >
-           <FontAwesome5 name={'plus'} size={20} color={'white'}/>
-          </TouchableOpacity>         */}
       </View>      
     )
 }
