@@ -51,7 +51,6 @@ function DoneList({navigation}) {
       const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: true, isList: false, isDone: false }
       dispatch(updateItem(editItem))
       const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
-      console.log(updatedItems, 'UPDATED ITEMS')
       const jsonItemValue = JSON.stringify(updatedItems)
       await AsyncStorage.setItem('Items', jsonItemValue)
     })

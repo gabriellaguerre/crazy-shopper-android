@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList, Image} from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { Modal, StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList, Image, Pressable} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
@@ -10,6 +10,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function Home({navigation}) {
   const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
+  const [modalVisible, setModalVisible] = useState(false)
+  const [thisId, setThisId] = useState('')
+  const [thisItem, setThisItem] = useState('')
 
  
   useEffect(()=>{
@@ -40,7 +43,7 @@ function Home({navigation}) {
   
     }
  
-    // removeItem(item.id)
+    
     const removeItem = async (id) => {
       try {
         dispatch(deleteItem(id))
@@ -112,7 +115,23 @@ function Home({navigation}) {
     return (
      
        <View style={styles.body}>
-        
+        <Modal 
+          animationType='slide'
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={()=>setModalVisible(!modalVisible)}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                 <Text style={styles.modalText}>Do you want to delete the {thisItem}?</Text>
+            <View style={styles.modalButtonsContainer}>
+            <TouchableOpacity style={styles.cancelButton} onPress={()=>setModalVisible(!modalVisible)}>
+              <Text style={styles.cancelText}>Cancel</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.deleteButton} onPress={()=>{removeItem(thisId);setModalVisible(false)}}>
+              <Text style={styles.deleteText}>Delete</Text></TouchableOpacity>
+              </View>
+            </View>
+            </View>
+          </Modal>
          {newItems && newItems.length > 0 ? (
           <FlatList 
             data={newItems}
@@ -129,7 +148,7 @@ function Home({navigation}) {
                 <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
                   <FontAwesome5 name={'pen'} size={25} color={'#000080'} />
                 </TouchableOpacity>              
-                <TouchableOpacity onPress={()=> removeItem(item.id)}>
+                <TouchableOpacity onPress={()=>{setModalVisible(true); setThisId(item.id); setThisItem(item.item)}}>
                   <FontAwesome5 name={'trash'} size={25} color={'red'} />
                 </TouchableOpacity>
                 </View>
@@ -221,7 +240,61 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
-    
+/*****************************MODAL******** */
+centeredView: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: 22,
+},
+modalView: {
+  margin: 20,
+  backgroundColor: '#B0E0E6',
+  borderRadius: 20,
+  padding: 35,
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.25,
+  shadowRadius: 4,
+  elevation: 5,
+},
+modalText: {
+  marginBottom: 15,
+  textAlign: 'center',
+  fontSize: 25,
+  fontWeight: 'bold',
+},
+modalButtonsContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  margin: 10,
+},
+cancelButton: {
+  backgroundColor: 'blue', 
+  borderRadius: 20,
+},
+cancelText: {
+  fontSize: 20,
+  color: 'white',
+  margin: 15,
+  fontWeight: 'bold',
+},
+deleteText: {
+  fontSize: 20,
+  color: 'white',
+  margin: 15,
+  fontWeight: 'bold',
+},
+deleteButton: {
+  backgroundColor: '#FF0000', 
+  borderRadius: 20, 
+  margin: 20,
+},  
   });
 
 export default Home;
