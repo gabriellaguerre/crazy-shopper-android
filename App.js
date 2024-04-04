@@ -81,8 +81,8 @@ function App() {
           component={List} 
           options={{ tabBarBadge: shoppingList.length ? shoppingList.length :  null,
                      headerTitleAlign: 'center',
-                     headerStyle: {backgroundColor: '#4169E1'},
-                     headerTintColor: '#B0E0E6',
+                     headerStyle: {backgroundColor: '#f6b4c1'},
+                     headerTintColor: '#7b5a60',
                      headerTitleStyle: {fontWeight: 'bold', fontSize: 25}
           }}
           

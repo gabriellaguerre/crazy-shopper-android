@@ -132,7 +132,7 @@ function Home({navigation}) {
           <View style={styles.imageBody}>
         <Image 
           style={styles.logo}
-          source={require('./assets/crazy_shopper.png')}
+          source={require('./assets/fullyTransparentCart.png')}
         />
       </View>
          )}

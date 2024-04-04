@@ -80,7 +80,7 @@ const returnItem = async (item) => {
         <View style={styles.imageBody}>
         <Image 
           style={styles.logo}
-          source={require('./assets/crazy_shopper.png')}
+          source={require('./assets/fullyTransparentCart.png')}
         />
       </View>
       )}
@@ -93,7 +93,7 @@ const returnItem = async (item) => {
 const styles = StyleSheet.create({
  body: {
    flex: 1,
-   backgroundColor: '#4169E1',
+   backgroundColor: '#f6b4c1',
  },
  listContainer: {
    marginHorizontal: 40,
@@ -162,7 +162,7 @@ imageBody: {
   flex: 1,
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#4169E1'
+  backgroundColor: '#f6b4c1'
 },
  
 });
