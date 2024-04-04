@@ -7,7 +7,7 @@ function Splash({navigation}) {
       <View style={styles.body}>
         <Image 
           style={styles.logo}
-          source={require('./assets/crazy_shopper.png')}
+          source={require('./assets/shopping-cart-logo.png')}
         />
         <Text style={styles.text}> Crazy Shopper </Text>
       </View>
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#6495ED'
+    backgroundColor: '#EBCAAD'
     // backgroundColor: '#9400D3'
   },
   logo: {
