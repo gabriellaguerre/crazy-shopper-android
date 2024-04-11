@@ -1,4 +1,4 @@
-package com.marketlistandroid
+package com.crazyshopper
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
