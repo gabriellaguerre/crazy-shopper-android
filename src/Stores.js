@@ -2,34 +2,36 @@ import React, { useEffect, useState } from 'react'
 import { Modal, StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList, Image, Pressable} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
+// import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
+import { selectAllStores, addStore, updateStore, deleteStore, deleteAll } from './redux/storesSlice';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function Stores({navigation}) {
-  const items = useSelector(selectAllItems)
+  const stores = useSelector(selectAllStores)
   const dispatch = useDispatch()
+  
   const [modalVisible, setModalVisible] = useState(false)
   const [thisId, setThisId] = useState('')
-  const [thisItem, setThisItem] = useState('')
+  const [thisStore, setThisStore] = useState('')
 
  
   useEffect(()=>{
       dispatch(deleteAll());
-      getList()
+      getStores()
     },[])
 
-    const getList = async () => {
+    const getStores = async () => {
       try {
-         const jsonValue = await AsyncStorage.getItem('Items')
+         const jsonValue = await AsyncStorage.getItem('Stores')
          if(jsonValue !== null){
-          const itemsArray = JSON.parse(jsonValue)
+          const storesArray = JSON.parse(jsonValue)
         
-          if(Array.isArray(itemsArray)){
-            itemsArray.forEach(obj => {
-          const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store, isItem:obj.isItem, isList: obj.isList, isDone: obj.isDone };
-          dispatch(addItem(thisItem));
+          if(Array.isArray(storesArray)){
+            storesArray.forEach(obj => {
+          const thisStore = { id: obj.id, name: obj.name };
+          dispatch(addStore(thisStore));
           });
           } else {
             console.error("Error loading items: Invalid data format")
@@ -44,14 +46,14 @@ function Stores({navigation}) {
     }
  
     
-    const removeItem = async (id) => {
+    const removeStore = async (id) => {
       try {
-        dispatch(deleteItem(id))
+        dispatch(deleteStore(id))
         
-        const newList = items.filter(item=>item.id !== id)
+        const newList = stores.filter(store => store.id !== id)
       
-        const jsonItemValue = JSON.stringify(newList)
-        await AsyncStorage.setItem('Items', jsonItemValue)     
+        const jsonStoreValue = JSON.stringify(newList)
+        await AsyncStorage.setItem('Stores', jsonStoreValue)     
       } catch (error) {
         console.log(error)
       }
@@ -65,12 +67,12 @@ function Stores({navigation}) {
    
     const addToShoppingList = async (item) => {
       try {
-        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: false, isList: true, isDone: false}
-        dispatch(updateItem(editItem))
-        const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
+        const editStore = {id: stores.id, name: stores.name }
+        dispatch(updateStore(editItem))
+        const updatedStores = stores.map(store => store.id === editStore.id ? editStore : store)
         
-        const jsonItemValue = JSON.stringify(updatedItems)
-        await AsyncStorage.setItem('Items', jsonItemValue)
+        const jsonStoreValue = JSON.stringify(updatedStores)
+        await AsyncStorage.setItem('Stores', jsonStoreValue)
         
     
       } catch (error) {
@@ -79,7 +81,7 @@ function Stores({navigation}) {
        
     }
 
-    const newItems = items.filter(item=> item.isItem === true).sort((a, b) => a.item.localeCompare(b.item));
+    const newStores = stores.filter(store => store).sort((a, b) => a.store.localeCompare(b.store));
     
     
 
@@ -93,7 +95,7 @@ function Stores({navigation}) {
           onRequestClose={()=>setModalVisible(!modalVisible)}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                 <Text style={styles.modalText}>Do you want to delete the {thisItem}?</Text>
+                 <Text style={styles.modalText}>Do you want to delete the {thisStore}?</Text>
             <View style={styles.modalButtonsContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={()=>setModalVisible(!modalVisible)}>
               <Text style={styles.cancelText}>Cancel</Text></TouchableOpacity>
@@ -103,14 +105,14 @@ function Stores({navigation}) {
             </View>
             </View>
           </Modal>
-         {newItems && newItems.length > 0 ? (
+         {newStores && newStores.length > 0 ? (
           <FlatList 
-            data={newItems}
-            renderItem={({ item }) => (
+            data={newStores}
+            renderItem={({ store }) => (
                 <View style={styles.listContainer}>
-                  <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
-                  <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-                  <Text style={styles.subtitle}>{item.store}</Text>
+                  <Text style={styles.title} numberOfLines={1}>{store.name}</Text>
+                  {/* <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
+                  <Text style={styles.subtitle}>{item.store}</Text> */}
                
                   <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>
@@ -132,7 +134,7 @@ function Stores({navigation}) {
           <View style={styles.imageBody}>
         <Image 
           style={styles.logo}
-          source={require('./assets/fullyTransparentCart.png')}
+          source={require('./assets/store-empty.png')}
         />
       </View>
          )}
@@ -199,8 +201,8 @@ const styles = StyleSheet.create({
       fontSize: 40,
     },
     logo: {
-      width: 200,
-      height: 150,
+      width: 100,
+      height: 100,
       margin: 20,
     },
     imageBody: {

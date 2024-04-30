@@ -46,7 +46,7 @@ function DoneList({navigation}) {
       <View style={styles.imageBody}>
       <Image 
         style={styles.logo}
-        source={require('./assets/fullyTransparentCart.png')}
+        source={require('./assets/done-list.png')}
       />
    
     </View>
@@ -123,8 +123,8 @@ text: {
   color: 'white',
 },
 logo: {
-  width: 200,
-  height: 150,
+  width: 100,
+  height: 100,
   margin: 20,
 },
 imageBody: {

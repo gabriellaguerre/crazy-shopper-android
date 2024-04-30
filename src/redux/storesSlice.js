@@ -2,7 +2,7 @@ import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const initialState = []
 
-const itemsSlice = createSlice({
+const storesSlice = createSlice({
     name: 'stores',
     initialState,
     reducers: {
@@ -11,7 +11,7 @@ const itemsSlice = createSlice({
         },
         updateStore(state, action){
                 const {id, name } = action.payload
-                const existingStore = state.find(item => item.id === id)
+                const existingStore = state.find(store => store.id === id)
                 if(existingStore){
                         existingStore.name = name
                 }
@@ -19,21 +19,21 @@ const itemsSlice = createSlice({
         },
         deleteStore(state, action){
                 const id = action.payload 
-                return state.filter(item => item.id !== id);
+                return state.filter(store => store.id !== id);
 
         },
         deleteAll(state) {
-                return initialState  
+            return initialState  
         },
-        shoppingItems(state,action) {
-                return state.filter(item => item.isList === true)
-        }
+        // shoppingItems(state,action) {
+        //         return state.filter(item => item.isList === true)
+        // }
             
         },
 })
 
 export const selectAllStores = (state) => state.stores;
 
-export const { addItem, updateItem, shoppingItems, deleteItem, deleteAll } = storesSlice.actions
+export const { addStore, updateStore, deleteStore, deleteAll } = storesSlice.actions
 
 export default storesSlice.reducer;

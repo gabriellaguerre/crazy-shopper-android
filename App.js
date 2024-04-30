@@ -7,6 +7,7 @@ import Items from './src/Items';
 import List from './src/List';
 import Done from './src/Done';
 import AddItemForm from './src/AddItemForm';
+import AddStoreForm from './src/AddStoreForm';
 import Stores from './src/Stores';
 import Splash from './src/Splash';
 import { selectAllItems } from './src/redux/itemsSlice';
@@ -58,7 +59,7 @@ function App() {
               iconName='cart-arrow-down'
               size = focused ? 25 : 20
               color = focused ? 'blue' : 'black'
-            } else if(route.name==='Done') {
+            } else if(route.name==='Done List') {
               iconName='check-square'
               size = focused ? 25 : 20
               color = focused ? 'blue' : 'black'
@@ -78,11 +79,8 @@ function App() {
       >
         <Tab.Screen 
           name='Stores'
-          component={Stores}
-          options={{ headerTitleAlign: 'center',
-          headerStyle: {backgroundColor: '#C0C0C0'},
-          headerTintColor: '#7b5a60',
-          headerTitleStyle: {fontWeight: 'bold', fontSize: 25} }}
+          component={StoresTabNavigator}
+          options={{headerShown: false}}
         />
         <Tab.Screen 
           name='Grocery List'
@@ -96,7 +94,7 @@ function App() {
           
         />
          <Tab.Screen 
-          name='Done'
+          name='Done List'
           component={Done}
           options={{ tabBarBadge: doneList.length ? doneList.length :  null,
                     headerTitleAlign: 'center',
@@ -108,7 +106,7 @@ function App() {
         />
           <Tab.Screen 
           name='Items'
-          component={HomeTabNavigator}
+          component={ItemsTabNavigator}
           options={{ headerShown: false }}
         />
     </Tab.Navigator>  
@@ -118,14 +116,14 @@ function App() {
   );
 }
 
-function HomeTabNavigator(){
+function ItemsTabNavigator(){
   const navigation = useNavigation();
   return(
    
       <Stack.Navigator>
      
       <Stack.Screen 
-          name='All Items List'
+          name='Items List'
           component={Items}
           options={{ headerTitleAlign: 'center',
                      headerRight: ()=> <View style={styles.touchContainer}><TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Item')}} >
@@ -140,16 +138,44 @@ function HomeTabNavigator(){
         <Stack.Screen 
           name='Item'
           component={AddItemForm}
-          
-         />
+         />       
       </Stack.Navigator>
   )
 }
 
+function StoresTabNavigator(){
+  const navigation = useNavigation();
+  return(
+   
+      <Stack.Navigator>
+     
+      <Stack.Screen 
+          name='Stores List'
+          component={Stores}
+          options={{ headerTitleAlign: 'center',
+                     headerRight: ()=> <View style={styles.touchContainer}><TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Store')}} >
+                     <FontAwesome5 name={'plus'} size={20} color={'white'}/>
+                    </TouchableOpacity></View>,
+                    headerStyle: {backgroundColor: '#C0C0C0'},
+                    headerTintColor: '#696969',
+                    headerTitleStyle: {fontWeight: 'bold', fontSize: 25}
+                     
+                  }}
+         />
+        <Stack.Screen 
+          name='Store'
+          component={AddStoreForm}
+         />
+      
+      </Stack.Navigator>
+  )
+}
+
+
 const styles = StyleSheet.create({
   button: {
-    width: 50,
-    height: 50,
+    width: 35,
+    height: 35,
     borderRadius: 30,
     backgroundColor: 'blue',
     justifyContent: 'center',
