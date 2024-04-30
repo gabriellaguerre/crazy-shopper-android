@@ -3,10 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import Home from './src/Home';
+import Items from './src/Items';
 import List from './src/List';
 import Done from './src/Done';
 import AddItemForm from './src/AddItemForm';
+import Stores from './src/Stores';
 import Splash from './src/Splash';
 import { selectAllItems } from './src/redux/itemsSlice';
 import { useSelector } from 'react-redux';
@@ -45,19 +46,23 @@ function App() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({focused, size, color, r}) => {
             let iconName;
-            if(route.name==='Home') {
-              iconName='home'
+            if(route.name==='Items') {
+              iconName='list'
               size = focused ? 25 : 20
               color = focused ? 'blue' : 'black'
-            } else if(route.name==='Shopping List') {
-              iconName='list'
+            } else if(route.name==='Stores') {
+                iconName='store'
+                size = focused ? 25 : 20
+                color = focused ? 'blue' : 'black'
+            }else if(route.name==='Grocery List') {
+              iconName='cart-arrow-down'
               size = focused ? 25 : 20
               color = focused ? 'blue' : 'black'
             } else if(route.name==='Done') {
               iconName='check-square'
               size = focused ? 25 : 20
               color = focused ? 'blue' : 'black'
-            }
+            } 
             return(
               <FontAwesome5 
                 name={iconName}
@@ -72,12 +77,15 @@ function App() {
         
       >
         <Tab.Screen 
-          name='Home'
-          component={HomeTabNavigator}
-          options={{ headerShown: false }}
+          name='Stores'
+          component={Stores}
+          options={{ headerTitleAlign: 'center',
+          headerStyle: {backgroundColor: '#C0C0C0'},
+          headerTintColor: '#7b5a60',
+          headerTitleStyle: {fontWeight: 'bold', fontSize: 25} }}
         />
         <Tab.Screen 
-          name='Shopping List'
+          name='Grocery List'
           component={List} 
           options={{ tabBarBadge: shoppingList.length ? shoppingList.length :  null,
                      headerTitleAlign: 'center',
@@ -98,6 +106,11 @@ function App() {
           
           }}
         />
+          <Tab.Screen 
+          name='Items'
+          component={HomeTabNavigator}
+          options={{ headerShown: false }}
+        />
     </Tab.Navigator>  
       )}
     </NavigationContainer>
@@ -113,7 +126,7 @@ function HomeTabNavigator(){
      
       <Stack.Screen 
           name='All Items List'
-          component={Home}
+          component={Items}
           options={{ headerTitleAlign: 'center',
                      headerRight: ()=> <View style={styles.touchContainer}><TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Item')}} >
                      <FontAwesome5 name={'plus'} size={20} color={'white'}/>

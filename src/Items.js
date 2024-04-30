@@ -7,7 +7,7 @@ import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './re
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function Home({navigation}) {
+function Items({navigation}) {
   const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
@@ -265,4 +265,4 @@ deleteButton: {
 },  
   });
 
-export default Home;
+export default Items;
