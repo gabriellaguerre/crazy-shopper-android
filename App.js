@@ -54,7 +54,7 @@ function App() {
             } else if(route.name==='Stores') {
                 iconName='store'
                 size = focused ? 25 : 20
-                color = focused ? 'blue' : 'black'
+                color = focused ? 'green' : 'black'
             }else if(route.name==='Grocery List') {
               iconName='cart-arrow-down'
               size = focused ? 25 : 20
@@ -126,7 +126,7 @@ function ItemsTabNavigator(){
           name='Items List'
           component={Items}
           options={{ headerTitleAlign: 'center',
-                     headerRight: ()=> <View style={styles.touchContainer}><TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Item')}} >
+                     headerRight: ()=> <View style={styles.touchContainer}><TouchableOpacity style={styles.buttonItem} onPress={()=>{navigation.navigate('Item')}} >
                      <FontAwesome5 name={'plus'} size={20} color={'white'}/>
                     </TouchableOpacity></View>,
                     headerStyle: {backgroundColor: '#C0C0C0'},
@@ -153,7 +153,7 @@ function StoresTabNavigator(){
           name='Stores List'
           component={Stores}
           options={{ headerTitleAlign: 'center',
-                     headerRight: ()=> <View style={styles.touchContainer}><TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Store')}} >
+                     headerRight: ()=> <View style={styles.touchContainer}><TouchableOpacity style={styles.buttonStore} onPress={()=>{navigation.navigate('Store')}} >
                      <FontAwesome5 name={'plus'} size={20} color={'white'}/>
                     </TouchableOpacity></View>,
                     headerStyle: {backgroundColor: '#C0C0C0'},
@@ -173,7 +173,15 @@ function StoresTabNavigator(){
 
 
 const styles = StyleSheet.create({
-  button: {
+  buttonStore: {
+    width: 35,
+    height: 35,
+    borderRadius: 30,
+    backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonItem: {
     width: 35,
     height: 35,
     borderRadius: 30,

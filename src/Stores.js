@@ -121,7 +121,7 @@ function Stores({navigation}) {
                 <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
                   <FontAwesome5 name={'pen'} size={25} color={'#000080'} />
                 </TouchableOpacity>              
-                <TouchableOpacity onPress={()=>{setModalVisible(true); setThisId(item.id); setThisItem(item.item)}}>
+                <TouchableOpacity onPress={()=>{setModalVisible(true); setThisId(item.id); setThisStore(item.item)}}>
                   <FontAwesome5 name={'trash'} size={25} color={'red'} />
                 </TouchableOpacity>
                 </View>
@@ -136,6 +136,11 @@ function Stores({navigation}) {
           style={styles.logo}
           source={require('./assets/store-empty.png')}
         />
+        <Text>NO STORES ARE ADDED YET</Text>
+        <Text>CLICK ON THE PLUS BUTTON ON TOP OR BELOW</Text>
+        <View style={styles.touchContainer}><TouchableOpacity style={styles.buttonEmpty} onPress={()=>{navigation.navigate('Store')}} >
+                     <FontAwesome5 name={'plus'} size={20} color={'white'}/>
+                    </TouchableOpacity></View>
       </View>
          )}
      
@@ -209,6 +214,15 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    buttonEmpty: {
+      width: 40,
+      height:40,
+      borderRadius: 30,
+      backgroundColor: 'green',
+      justifyContent: 'center',
+      alignItems: 'center',
+      margin: 10,
     },
 /*****************************MODAL******** */
 centeredView: {
