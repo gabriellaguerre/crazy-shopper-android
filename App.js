@@ -58,11 +58,11 @@ function App() {
             }else if(route.name==='Grocery List') {
               iconName='cart-arrow-down'
               size = focused ? 25 : 20
-              color = focused ? 'blue' : 'black'
+              color = focused ? 'red' : 'black'
             } else if(route.name==='Done List') {
               iconName='check-square'
               size = focused ? 25 : 20
-              color = focused ? 'blue' : 'black'
+              color = focused ? '#2F4F4F' : 'black'
             } 
             return(
               <FontAwesome5 

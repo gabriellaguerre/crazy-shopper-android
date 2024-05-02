@@ -10,10 +10,12 @@ const storesSlice = createSlice({
                 state.push(action.payload)
         },
         updateStore(state, action){
-                const {id, name } = action.payload
+                const {id, name, description, isStore } = action.payload
                 const existingStore = state.find(store => store.id === id)
                 if(existingStore){
                         existingStore.name = name
+                        existingStore.description = description
+                        existingStore.isStore = isStore
                 }
 
         },

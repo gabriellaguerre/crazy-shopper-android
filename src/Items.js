@@ -134,6 +134,11 @@ function Items({navigation}) {
           style={styles.logo}
           source={require('./assets/list.png')}
         />
+         <Text>NO ITEMS ARE ADDED YET</Text>
+        <Text>CLICK ON THE PLUS BUTTON ON TOP OR BELOW</Text>
+        <View style={styles.touchContainer}><TouchableOpacity style={styles.buttonEmpty} onPress={()=>{navigation.navigate('Item')}} >
+                     <FontAwesome5 name={'plus'} size={20} color={'white'}/>
+                    </TouchableOpacity></View>
       </View>
          )}
      
@@ -207,6 +212,15 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    buttonEmpty: {
+      width: 40,
+      height:40,
+      borderRadius: 30,
+      backgroundColor: 'blue',
+      justifyContent: 'center',
+      alignItems: 'center',
+      margin: 10,
     },
 /*****************************MODAL******** */
 centeredView: {

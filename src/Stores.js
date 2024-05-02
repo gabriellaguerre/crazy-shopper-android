@@ -13,10 +13,10 @@ function Stores({navigation}) {
   const dispatch = useDispatch()
   
   const [modalVisible, setModalVisible] = useState(false)
-  const [thisId, setThisId] = useState('')
+  const [thisStoreId, setThisStoreId] = useState('')
   const [thisStore, setThisStore] = useState('')
 
- 
+  console.log(stores, 'sssssssssssss')
   useEffect(()=>{
       dispatch(deleteAll());
       getStores()
@@ -30,7 +30,7 @@ function Stores({navigation}) {
         
           if(Array.isArray(storesArray)){
             storesArray.forEach(obj => {
-          const thisStore = { id: obj.id, name: obj.name };
+          const thisStore = { id: obj.id, name: obj.name, description: obj.description, isStore: obj.isStore };
           dispatch(addStore(thisStore));
           });
           } else {
@@ -50,9 +50,9 @@ function Stores({navigation}) {
       try {
         dispatch(deleteStore(id))
         
-        const newList = stores.filter(store => store.id !== id)
+        const newStoreList = stores.filter(store => store.id !== id)
       
-        const jsonStoreValue = JSON.stringify(newList)
+        const jsonStoreValue = JSON.stringify(newStoreList)
         await AsyncStorage.setItem('Stores', jsonStoreValue)     
       } catch (error) {
         console.log(error)
@@ -60,15 +60,15 @@ function Stores({navigation}) {
      
     }
  
-    const navigateToAddItemForm = (item) => {
-      navigation.navigate('Item', { item })
+    const navigateToAddStoreForm = (store) => {
+      navigation.navigate('Store', { store })
     }
 
    
-    const addToShoppingList = async (item) => {
+    const addToShoppingList = async (store) => {
       try {
-        const editStore = {id: stores.id, name: stores.name }
-        dispatch(updateStore(editItem))
+        const editStore = {id: store.id, name: store.name, description: store.description, isStore:false }
+        dispatch(updateStore(editStore))
         const updatedStores = stores.map(store => store.id === editStore.id ? editStore : store)
         
         const jsonStoreValue = JSON.stringify(updatedStores)
@@ -81,7 +81,8 @@ function Stores({navigation}) {
        
     }
 
-    const newStores = stores.filter(store => store).sort((a, b) => a.store.localeCompare(b.store));
+    const newStores = stores.filter(store=>store.isStore === true).sort((a, b) => a.store.localeCompare(b.store));
+    console.log(newStores, 'nnnnnnnnnnn')
     
     
 
@@ -99,7 +100,7 @@ function Stores({navigation}) {
             <View style={styles.modalButtonsContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={()=>setModalVisible(!modalVisible)}>
               <Text style={styles.cancelText}>Cancel</Text></TouchableOpacity>
-              <TouchableOpacity style={styles.deleteButton} onPress={()=>{removeItem(thisId);setModalVisible(false)}}>
+              <TouchableOpacity style={styles.deleteButton} onPress={()=>{removeStore(thisStoreId);setModalVisible(false)}}>
               <Text style={styles.deleteText}>Delete</Text></TouchableOpacity>
               </View>
             </View>
@@ -111,17 +112,16 @@ function Stores({navigation}) {
             renderItem={({ store }) => (
                 <View style={styles.listContainer}>
                   <Text style={styles.title} numberOfLines={1}>{store.name}</Text>
-                  {/* <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-                  <Text style={styles.subtitle}>{item.store}</Text> */}
-               
+                  <Text style={styles.subtitle} numberOfLines={1}> {store.description}</Text>
+                            
                   <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>
+                <TouchableOpacity onPress={()=>{addToShoppingList}}>
                   <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
+                <TouchableOpacity onPress={()=>{navigateToAddStoreForm(store)}}>
                   <FontAwesome5 name={'pen'} size={25} color={'#000080'} />
                 </TouchableOpacity>              
-                <TouchableOpacity onPress={()=>{setModalVisible(true); setThisId(item.id); setThisStore(item.item)}}>
+                <TouchableOpacity onPress={()=>{setModalVisible(true); setThisStoreId(store.id); setThisStore(store.name)}}>
                   <FontAwesome5 name={'trash'} size={25} color={'red'} />
                 </TouchableOpacity>
                 </View>

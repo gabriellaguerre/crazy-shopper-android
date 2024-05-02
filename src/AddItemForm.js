@@ -17,7 +17,7 @@ function AddItemForm({navigation, route}) {
   const [item, setItem] = useState(thisitem ? thisitem.item : '')
   const [desc, setDesc] = useState(thisitem ? thisitem.desc : '')
   // const [price, setPrice] = useState(thisitem ? thisitem.price : 0)
-  const [store, setStore] = useState(thisitem ? thisitem.store : '')
+  // const [store, setStore] = useState(thisitem ? thisitem.store : '')
   const [isItem, setIsItem] = useState(thisitem ? thisitem.isItem : true)
   const [isList, setIsList] = useState(thisitem ? thisitem.isList : false)
   const [isDone, setIsDone] = useState(thisitem ? thisitem.isDone : false)
@@ -27,7 +27,7 @@ function AddItemForm({navigation, route}) {
       setItem(thisitem.item);
       setDesc(thisitem.desc);
       // setPrice(thisitem.price);
-      setStore(thisitem.store)
+      // setStore(thisitem.store)
     }
   },[thisitem])
 
@@ -44,7 +44,7 @@ function AddItemForm({navigation, route}) {
         setIsItem(true)
         setIsList(false)
         setIsDone(false)
-        navigation.navigate("All Items List")
+        navigation.navigate("Items List")
         const itemsList = [...items, newItem]
         const jsonValue = JSON.stringify(itemsList)
         await AsyncStorage.setItem('Items', jsonValue)
@@ -66,7 +66,7 @@ function AddItemForm({navigation, route}) {
           setItem('')
           setDesc('')
           // setPrice('')
-          setStore('')
+          // setStore('')
 
           const updatedItems = items.map(i => (i.id === editItem.id ? editItem : i));
           await AsyncStorage.setItem('Items', JSON.stringify(updatedItems));
@@ -91,25 +91,25 @@ function AddItemForm({navigation, route}) {
         
         <TextInput 
             style={styles.input}
-            placeholder='Item'
+            placeholder='Enter Item Name'
             value={item}
             onChangeText={(value)=>setItem(value)}
             />
 
         <TextInput 
             style={styles.input}
-            placeholder='Description'
+            placeholder='Enter Item Description (optional)'
             value={desc}
             onChangeText={(value)=>setDesc(value)}
             multiline
             />
 
-         <TextInput 
+         {/* <TextInput 
             style={styles.input}
             placeholder='Store Name'
             value={store}
             onChangeText={(value)=>setStore(value)}
-            />
+            /> */}
 
         <View>
           {!thisitem ? (

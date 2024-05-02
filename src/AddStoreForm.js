@@ -2,54 +2,53 @@ import React, { useEffect, useState } from 'react'
 import { Text, StyleSheet, View, TextInput, Button, Alert, TouchableOpacity } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, updateItem, selectAllItems } from './redux/itemsSlice';
+// import { addItem, updateItem, selectAllItems } from './redux/itemsSlice';
+import { addStore, updateStore, selectAllStores } from './redux/storesSlice';
 import { nanoid } from '@reduxjs/toolkit';
 
 
 
 
 function AddStoreForm({navigation, route}) {
-  const {item: thisitem} = route.params ? route.params : 0
+  const {store: thisStore} = route.params ? route.params : 0
  
-  const items = useSelector(selectAllItems)
+  const stores = useSelector(selectAllStores)
   const dispatch = useDispatch()
 
-  const [item, setItem] = useState(thisitem ? thisitem.item : '')
-  const [desc, setDesc] = useState(thisitem ? thisitem.desc : '')
-  // const [price, setPrice] = useState(thisitem ? thisitem.price : 0)
-  const [store, setStore] = useState(thisitem ? thisitem.store : '')
-  const [isItem, setIsItem] = useState(thisitem ? thisitem.isItem : true)
-  const [isList, setIsList] = useState(thisitem ? thisitem.isList : false)
-  const [isDone, setIsDone] = useState(thisitem ? thisitem.isDone : false)
+  
+ 
+  const [name, setName] = useState(thisStore ? thisStore.name : '')
+  const [description, setDescription] = useState(thisStore ? thisStore.description : '')
+  const [isStore, setIsStore] = useState(thisStore ? thisStore.isStore : true)
 
   useEffect(()=>{
-    if(thisitem) {
-      setItem(thisitem.item);
-      setDesc(thisitem.desc);
+    if(thisStore) {
+      setName(thisStore.name);
+      setDescription(thisStore.description);
       // setPrice(thisitem.price);
-      setStore(thisitem.store)
+      // setStore(thisitem.store)
     }
-  },[thisitem])
+  },[thisStore])
 
   const createItem = async () => {
     try {
-      if(item) {
-        const newItem = {id: nanoid(), item: item, desc: desc, store: store, isItem: isItem, isList: isList, isDone: isDone}
-        dispatch(addItem(newItem))
-        Alert.alert('Success', `Successfully added ${item}`)
-        setItem('')
-        setDesc('')
+      if(name) {
+        const newStore = {id: nanoid(), name: name.toUpperCase(), description: description, isStore: isStore}
+        dispatch(addStore(newStore))
+        Alert.alert('Success', `Successfully added ${name}`)
+        setName('')
+        setDescription('')
         // setPrice('')
-        setStore('')
-        setIsItem(true)
-        setIsList(false)
-        setIsDone(false)
-        navigation.navigate("All Items List")
-        const itemsList = [...items, newItem]
-        const jsonValue = JSON.stringify(itemsList)
-        await AsyncStorage.setItem('Items', jsonValue)
+        // setStore('')
+        setIsStore(true)
+        // setIsList(false)
+        // setIsDone(false)
+        navigation.navigate("Stores List")
+        const storesList = [...stores, newStore]
+        const jsonValue = JSON.stringify(storesList)
+        await AsyncStorage.setItem('Stores', jsonValue)
       } else {
-        Alert.alert('Warning', 'Please enter an item')
+        Alert.alert('Warning', 'Please enter a store name')
       }
       } catch (error) {
         console.log(error)
@@ -58,21 +57,21 @@ function AddStoreForm({navigation, route}) {
 
   const editItem = async () => {
     try {
-        if(item) {
-          const editItem = {id: thisitem.id, item, desc, store, isItem, isList, isDone}
-          dispatch(updateItem(editItem))
+        if(name) {
+          const editStore = {id: thisStore.id, name, description, isStore}
+          dispatch(updateStore(editStore))
           navigation.goBack()
-          Alert.alert('Success', `Successfully edited ${item}`)
-          setItem('')
-          setDesc('')
+          Alert.alert('Success', `Successfully edited ${name}`)
+          setName('')
+          setDescription('')
           // setPrice('')
-          setStore('')
+          // setStore('')
 
-          const updatedItems = items.map(i => (i.id === editItem.id ? editItem : i));
-          await AsyncStorage.setItem('Items', JSON.stringify(updatedItems));
+          const updatedStores = stores.map(i => (i.id === editStore.id ? editStore : i));
+          await AsyncStorage.setItem('Stores', JSON.stringify(updatedStores));
         } else {
           Alert.alert('Warning', 'Please enter all item details');
-          await AsyncStorage.setItem('Items', jsonValue)
+          await AsyncStorage.setItem('Stores', jsonValue)
           
         } 
 
@@ -91,30 +90,30 @@ function AddStoreForm({navigation, route}) {
         
         <TextInput 
             style={styles.input}
-            placeholder='Item'
-            value={item}
-            onChangeText={(value)=>setItem(value)}
+            placeholder='Enter Store Name'
+            value={name}
+            onChangeText={(value)=>setName(value)}
             />
 
         <TextInput 
             style={styles.input}
-            placeholder='Description'
-            value={desc}
-            onChangeText={(value)=>setDesc(value)}
+            placeholder='Enter Store Description (optional)'
+            value={description}
+            onChangeText={(value)=>setDescription(value)}
             multiline
             />
 
-         <TextInput 
+         {/* <TextInput 
             style={styles.input}
             placeholder='Store Name'
             value={store}
             onChangeText={(value)=>setStore(value)}
-            />
+            /> */}
 
         <View>
-          {!thisitem ? (
+          {!thisStore ? (
           <TouchableOpacity style={styles.addButton} onPress={createItem}>
-              <Text style={styles.addText}>+ Add To Items List</Text>
+              <Text style={styles.addText}>+ Add To Stores List</Text>
            </TouchableOpacity >
           ):(
           <TouchableOpacity  style={styles.editButton}  onPress={editItem}>  
@@ -172,7 +171,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addButton: {
-    backgroundColor: 'blue', 
+    backgroundColor: 'green', 
     borderRadius: 20, 
     margin: 20,
   }
