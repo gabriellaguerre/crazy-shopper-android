@@ -51,7 +51,7 @@ function DoneList({navigation}) {
    
     </View>
     )}
-     <TouchableOpacity style={styles.button} onPress={async()=>{await resetItemsList().then(navigation.navigate('Home'))}}>
+     <TouchableOpacity style={styles.button} onPress={async()=>{await resetItemsList().then(navigation.navigate('Stores'))}}>
        <FontAwesome5 name={'hand-peace'} size={25} color={'white'} />
     </TouchableOpacity>  
        

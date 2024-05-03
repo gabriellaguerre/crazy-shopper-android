@@ -13,7 +13,7 @@ function List() {
   
   const addToDoneList = async (item) => {
     try {
-      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: false, isList: false, isDone: true}
+      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: false, isList: false, isDone: true}
       dispatch(updateItem(editItem))
       const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
       const jsonItemValue = JSON.stringify(updatedItems)
@@ -26,7 +26,7 @@ function List() {
 }
 const returnItem = async (item) => {
   try {
-    const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: true, isList: false, isDone: false}
+    const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: true, isList: false, isDone: false}
     dispatch(updateItem(editItem))
     const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
     const jsonItemValue = JSON.stringify(updatedItems)
@@ -39,13 +39,14 @@ const returnItem = async (item) => {
 }
   
   const newItems = items.filter(item=> item.isList === true)
-                        .sort((a, b) => {
-                          const storeComparison = a.store.localeCompare(b.store);
-                          if(storeComparison !== 0) {
-                            return storeComparison
-                          }
-                          return a.item.localeCompare(b.item);
-                        })
+                        // .sort((a, b) => {
+                        //   const storeComparison = a.store.localeCompare(b.store);
+                        //   if(storeComparison !== 0) {
+                        //     return storeComparison
+                        //   }
+                        //   return a.item.localeCompare(b.item);
+                        // })
+                        .sort((a, b) => a.item.localeCompare(b.item))
 
   
     return (

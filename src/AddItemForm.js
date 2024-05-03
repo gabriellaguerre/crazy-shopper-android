@@ -34,17 +34,18 @@ function AddItemForm({navigation, route}) {
   const createItem = async () => {
     try {
       if(item) {
-        const newItem = {id: nanoid(), item: item, desc: desc, store: store, isItem: isItem, isList: isList, isDone: isDone}
+        const newItem = {id: nanoid(), item: item, desc: desc, isItem: isItem, isList: isList, isDone: isDone}
         dispatch(addItem(newItem))
         Alert.alert('Success', `Successfully added ${item}`)
         setItem('')
         setDesc('')
         // setPrice('')
-        setStore('')
+        // setStore('')
         setIsItem(true)
         setIsList(false)
         setIsDone(false)
-        navigation.navigate("Items List")
+        // navigation.navigate("Items List")
+        navigation.goBack()
         const itemsList = [...items, newItem]
         const jsonValue = JSON.stringify(itemsList)
         await AsyncStorage.setItem('Items', jsonValue)
@@ -59,7 +60,7 @@ function AddItemForm({navigation, route}) {
   const editItem = async () => {
     try {
         if(item) {
-          const editItem = {id: thisitem.id, item, desc, store, isItem, isList, isDone}
+          const editItem = {id: thisitem.id, item, desc, isItem, isList, isDone}
           dispatch(updateItem(editItem))
           navigation.goBack()
           Alert.alert('Success', `Successfully edited ${item}`)

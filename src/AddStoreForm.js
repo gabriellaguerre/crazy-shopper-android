@@ -14,8 +14,6 @@ function AddStoreForm({navigation, route}) {
  
   const stores = useSelector(selectAllStores)
   const dispatch = useDispatch()
-
-  
  
   const [name, setName] = useState(thisStore ? thisStore.name : '')
   const [description, setDescription] = useState(thisStore ? thisStore.description : '')
@@ -117,7 +115,7 @@ function AddStoreForm({navigation, route}) {
            </TouchableOpacity >
           ):(
           <TouchableOpacity  style={styles.editButton}  onPress={editItem}>  
-            <Text style={styles.editText}>Edit This Item</Text>
+            <Text style={styles.editText}>Confirm Edit</Text>
             </TouchableOpacity>
             )}
          

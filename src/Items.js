@@ -28,7 +28,7 @@ function Items({navigation}) {
         
           if(Array.isArray(itemsArray)){
             itemsArray.forEach(obj => {
-          const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, store: obj.store, isItem:obj.isItem, isList: obj.isList, isDone: obj.isDone };
+          const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, isItem:obj.isItem, isList: obj.isList, isDone: obj.isDone };
           dispatch(addItem(thisItem));
           });
           } else {
@@ -65,7 +65,7 @@ function Items({navigation}) {
    
     const addToShoppingList = async (item) => {
       try {
-        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: false, isList: true, isDone: false}
+        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price,isItem: false, isList: true, isDone: false}
         dispatch(updateItem(editItem))
         const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
         
@@ -110,7 +110,7 @@ function Items({navigation}) {
                 <View style={styles.listContainer}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
                   <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-                  <Text style={styles.subtitle}>{item.store}</Text>
+                  {/* <Text style={styles.subtitle}>{item.store}</Text> */}
                
                   <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>

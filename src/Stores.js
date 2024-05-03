@@ -13,12 +13,14 @@ function Stores({navigation}) {
   const dispatch = useDispatch()
   
   const [modalVisible, setModalVisible] = useState(false)
+  const [editModalVisible, setEditModalVisible] = useState(false)
   const [thisStoreId, setThisStoreId] = useState('')
   const [thisStore, setThisStore] = useState('')
+  const [editThisStore, setEditThisStore] = useState({})
 
-  console.log(stores, 'sssssssssssss')
+  // console.log(stores, 'sssssssssssss')
   useEffect(()=>{
-      dispatch(deleteAll());
+      dispatch(deleteAll(stores));
       getStores()
     },[])
 
@@ -48,6 +50,7 @@ function Stores({navigation}) {
     
     const removeStore = async (id) => {
       try {
+        // console.log(id, 'iiiiiiiiiiiiiii')
         dispatch(deleteStore(id))
         
         const newStoreList = stores.filter(store => store.id !== id)
@@ -80,8 +83,8 @@ function Stores({navigation}) {
       }    
        
     }
-
-    const newStores = stores.filter(store=>store.isStore === true).sort((a, b) => a.store.localeCompare(b.store));
+    // filter(store=>store.isStore === true).
+    const newStores = stores.filter(store=> store.isStore === true).sort((a, b) => a.name.localeCompare(b.name));
     console.log(newStores, 'nnnnnnnnnnn')
     
     
@@ -90,13 +93,13 @@ function Stores({navigation}) {
      
        <View style={styles.body}>
         <Modal 
-          animationType='slide'
+          // animationType='slide'
           transparent={true}
           visible={modalVisible}
           onRequestClose={()=>setModalVisible(!modalVisible)}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                 <Text style={styles.modalText}>Do you want to delete the {thisStore}?</Text>
+                 <Text style={styles.modalText}>Do you want to delete {thisStore}?</Text>
             <View style={styles.modalButtonsContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={()=>setModalVisible(!modalVisible)}>
               <Text style={styles.cancelText}>Cancel</Text></TouchableOpacity>
@@ -106,11 +109,36 @@ function Stores({navigation}) {
             </View>
             </View>
           </Modal>
+{/*****************************************************************Store Image Modal**************************************************/}
+          <Modal 
+          // animationType='slide'
+          transparent={true}
+          visible={editModalVisible}
+          onRequestClose={()=>setEditModalVisible(!editModalVisible)}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                 {/* <Text style={styles.modalText}>Do you want to delete the {thisStore}?</Text> */}
+            <View style={styles.modalButtonsContainer}>
+            <TouchableOpacity style={styles.editModalButton} onPress={()=>{setEditModalVisible(!editModalVisible);navigateToAddStoreForm(editThisStore)}}>
+              <Text style={styles.cancelText}>Edit {thisStore}</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.deleteEditModalButton} onPress={()=>{setEditModalVisible(false);setModalVisible(true)}}>
+              <Text style={styles.deleteText}>Delete {thisStore}</Text></TouchableOpacity>
+              </View>
+            </View>
+            </View>
+          </Modal>
          {newStores && newStores.length > 0 ? (
+          <View style={styles.container}>
           <FlatList 
             data={newStores}
-            renderItem={({ store }) => (
+            numColumns={2} // Set the number of columns to 2
+            renderItem={({ item: store }) => (
                 <View style={styles.listContainer}>
+                  <TouchableOpacity style={styles.storeButton} onPress={()=>{setEditModalVisible(!editModalVisible); setThisStore(store.name); setEditThisStore(store)}}>
+                   <Image 
+                    style={styles.logo}
+                    source={require('./assets/store_pic.png')}
+                  /></TouchableOpacity>
                   <Text style={styles.title} numberOfLines={1}>{store.name}</Text>
                   <Text style={styles.subtitle} numberOfLines={1}> {store.description}</Text>
                             
@@ -118,18 +146,18 @@ function Stores({navigation}) {
                 <TouchableOpacity onPress={()=>{addToShoppingList}}>
                   <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{navigateToAddStoreForm(store)}}>
+                {/* <TouchableOpacity onPress={()=>{navigateToAddStoreForm(store)}}>
                   <FontAwesome5 name={'pen'} size={25} color={'#000080'} />
                 </TouchableOpacity>              
                 <TouchableOpacity onPress={()=>{setModalVisible(true); setThisStoreId(store.id); setThisStore(store.name)}}>
                   <FontAwesome5 name={'trash'} size={25} color={'red'} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 </View>
                 </View>                
             )}
             keyExtractor={(item, index) => index.toString()}
            />
-
+          </View>
          ):(
           <View style={styles.imageBody}>
         <Image 
@@ -152,9 +180,16 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#C0C0C0',
     },
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#C0C0C0', // Set the background color if needed
+    },
     listContainer: {
-      marginHorizontal: 40,
-      width: '90%',
+      // marginHorizontal: 20,
+      marginTop: 30,
+      width: '40%',
       margin: 10,
       alignSelf: 'center',
       backgroundColor: 'white',
@@ -163,7 +198,14 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       elevation: 5,
     },
-
+    /*****Store Button */  
+    storeButton: {
+      backgroundColor: '#DDDDDD',
+      borderRadius: 80,
+      marginTop: 5,
+      alignItems: 'center',
+      elevation: 5,
+    },
 /*****Add Item Round Blue Button */    
     button: {
       width: 60,
@@ -279,6 +321,15 @@ deleteButton: {
   borderRadius: 20, 
   margin: 20,
 },  
+editModalButton: {
+  backgroundColor: 'blue', 
+  borderRadius: 20,
+},
+deleteEditModalButton: {
+  backgroundColor: '#FF0000', 
+  borderRadius: 20, 
+  margin: 20,
+}
   });
 
 export default Stores;

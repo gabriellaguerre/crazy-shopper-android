@@ -72,7 +72,7 @@ function App() {
               />
             )
           },
-          tabBarShowLabel: false,
+          // tabBarShowLabel: false,
         }
         )}
         
@@ -80,7 +80,8 @@ function App() {
         <Tab.Screen 
           name='Stores'
           component={StoresTabNavigator}
-          options={{headerShown: false}}
+          options={{headerShown: false,
+                    tabBarLabelStyle: {fontSize: 15}}}
         />
         <Tab.Screen 
           name='Grocery List'
@@ -89,7 +90,8 @@ function App() {
                      headerTitleAlign: 'center',
                      headerStyle: {backgroundColor: '#f6b4c1'},
                      headerTintColor: '#7b5a60',
-                     headerTitleStyle: {fontWeight: 'bold', fontSize: 25}
+                     headerTitleStyle: {fontWeight: 'bold', fontSize: 25},
+                     tabBarLabelStyle: {fontSize: 15}                 
           }}
           
         />
@@ -100,14 +102,15 @@ function App() {
                     headerTitleAlign: 'center',
                     headerStyle: {backgroundColor: '#B0E0E6'},
                     headerTintColor: '#2F4F4F',
-                    headerTitleStyle: {fontWeight: 'bold', fontSize: 25}
-          
+                    headerTitleStyle: {fontWeight: 'bold', fontSize: 25},
+                    tabBarLabelStyle: {fontSize: 15}
           }}
         />
           <Tab.Screen 
           name='Items'
           component={ItemsTabNavigator}
-          options={{ headerShown: false }}
+          options={{ headerShown: false,
+                    tabBarLabelStyle: {fontSize: 15} }}
         />
     </Tab.Navigator>  
       )}
@@ -131,7 +134,8 @@ function ItemsTabNavigator(){
                     </TouchableOpacity></View>,
                     headerStyle: {backgroundColor: '#C0C0C0'},
                     headerTintColor: '#696969',
-                    headerTitleStyle: {fontWeight: 'bold', fontSize: 25}
+                    headerTitleStyle: {fontWeight: 'bold', fontSize: 25},
+                    
                      
                   }}
          />

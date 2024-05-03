@@ -21,6 +21,7 @@ const storesSlice = createSlice({
         },
         deleteStore(state, action){
                 const id = action.payload 
+                // console.log(id, 'ddddddddddd')
                 return state.filter(store => store.id !== id);
 
         },
