@@ -28,7 +28,7 @@ function Items({navigation}) {
         
           if(Array.isArray(itemsArray)){
             itemsArray.forEach(obj => {
-          const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, isItem:obj.isItem, isList: obj.isList, isDone: obj.isDone };
+          const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, isItem:obj.isItem, isList: obj.isList, isDone: obj.isDone, storeName: obj.storeName };
           dispatch(addItem(thisItem));
           });
           } else {
@@ -65,7 +65,7 @@ function Items({navigation}) {
    
     const addToShoppingList = async (item) => {
       try {
-        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price,isItem: false, isList: true, isDone: false}
+        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price,isItem: false, isList: true, isDone: false, storeName: item.storeName}
         dispatch(updateItem(editItem))
         const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
         

@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import { selectAllItems, updateItem } from './redux/itemsSlice';
+import { selectAllStores, updateStore } from './redux/storesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -8,6 +9,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 function List() {
   const items = useSelector(selectAllItems)
+  const stores = useSelector(selectAllStores)
   const dispatch = useDispatch()
 
   
@@ -37,6 +39,22 @@ const returnItem = async (item) => {
 }    
  
 }
+
+const returnStore = async (store) => {
+  try {
+    console.log(store,'sssssssssss')
+    const editStore = {id: store.id, name: store.name, description: store.description, isStore: true}
+    console.log(editStore, 'eeeeeeeeeeeee')
+    dispatch(updateStore(editStore))
+    const updatedStores = stores.map(store=>store.id === editStore.id ? editStore : store)
+    const jsonStoreValue = JSON.stringify(updatedStores)
+    await AsyncStorage.setItem('Stores', jsonStoreValue)
+
+} catch (error) {
+  console.log(error)
+}    
+ 
+}
   
   const newItems = items.filter(item=> item.isList === true)
                         // .sort((a, b) => {
@@ -48,12 +66,34 @@ const returnItem = async (item) => {
                         // })
                         .sort((a, b) => a.item.localeCompare(b.item))
 
-  
+  const newStores = stores.filter(store => store.isStore === false).sort((a,b)=> a.name.localeCompare(b.name))
     return (
       <>
      
       <View style={styles.body}>
-   
+      {newStores && newStores.length > 0 &&
+       <FlatList 
+       data={newStores}
+       renderItem={({ item }) => (
+           <View style={styles.listContainer}>
+             <Text style={styles.title} numberOfLines={1}>{item.name}</Text>
+             <Text style={styles.subtitle} numberOfLines={1}> {item.description}</Text>
+             {/* <Text style={styles.subtitle}>{item.store}</Text> */}
+       
+             <View style={styles.buttonsContainer}>
+             <TouchableOpacity onPress={()=>{ returnStore(item)}}>
+                 <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
+             </TouchableOpacity>
+
+           <TouchableOpacity onPress={()=>{ addToDoneList(item); }}>
+             <FontAwesome5 name={'check'} size={25} color={'green'} />
+           </TouchableOpacity>
+           </View>
+           </View>                
+       )}
+       keyExtractor={(item, index) => index.toString()}
+      />      
+      }
       {newItems && newItems.length > 0 ? (
        <FlatList 
          data={newItems}

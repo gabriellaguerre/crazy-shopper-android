@@ -143,7 +143,7 @@ function Stores({navigation}) {
                   <Text style={styles.subtitle} numberOfLines={1}> {store.description}</Text>
                             
                   <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={()=>{createShoppingList}}>
+                <TouchableOpacity onPress={()=>{createShoppingList(store)}}>
                   {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
                   <Text style={styles.createShoppingList}>Create Shopping List</Text>
                 </TouchableOpacity>
