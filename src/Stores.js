@@ -68,7 +68,7 @@ function Stores({navigation}) {
     }
 
    
-    const addToShoppingList = async (store) => {
+    const createShoppingList = async (store) => {
       try {
         const editStore = {id: store.id, name: store.name, description: store.description, isStore:false }
         dispatch(updateStore(editStore))
@@ -85,7 +85,7 @@ function Stores({navigation}) {
     }
     // filter(store=>store.isStore === true).
     const newStores = stores.filter(store=> store.isStore === true).sort((a, b) => a.name.localeCompare(b.name));
-    console.log(newStores, 'nnnnnnnnnnn')
+    // console.log(newStores, 'nnnnnnnnnnn')
     
     
 
@@ -134,7 +134,7 @@ function Stores({navigation}) {
             numColumns={2} // Set the number of columns to 2
             renderItem={({ item: store }) => (
                 <View style={styles.listContainer}>
-                  <TouchableOpacity style={styles.storeButton} onPress={()=>{setEditModalVisible(!editModalVisible); setThisStore(store.name); setEditThisStore(store)}}>
+                  <TouchableOpacity style={styles.storeButton} onPress={()=>{setEditModalVisible(!editModalVisible); setThisStore(store.name); setEditThisStore(store);setThisStoreId(store.id)}}>
                    <Image 
                     style={styles.logo}
                     source={require('./assets/store_pic.png')}
@@ -143,8 +143,9 @@ function Stores({navigation}) {
                   <Text style={styles.subtitle} numberOfLines={1}> {store.description}</Text>
                             
                   <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={()=>{addToShoppingList}}>
-                  <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} />
+                <TouchableOpacity onPress={()=>{createShoppingList}}>
+                  {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
+                  <Text style={styles.createShoppingList}>Create Shopping List</Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity onPress={()=>{navigateToAddStoreForm(store)}}>
                   <FontAwesome5 name={'pen'} size={25} color={'#000080'} />
@@ -187,9 +188,9 @@ const styles = StyleSheet.create({
       backgroundColor: '#C0C0C0', // Set the background color if needed
     },
     listContainer: {
-      // marginHorizontal: 20,
+      marginHorizontal: 20,
       marginTop: 30,
-      width: '40%',
+      // width: '40%',
       margin: 10,
       alignSelf: 'center',
       backgroundColor: 'white',
@@ -224,17 +225,30 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      margin: 10,
-     
+      // marginTop: 10,
+      marginBottom: 10,
+      backgroundColor: '#6497b1',
+      borderRadius: 5,
+      
     },
     title: {
       color: 'black',
-      fontSize: 30,
+      fontSize: 20,
       alignSelf: 'center',
+      marginTop: 10,
     },
     subtitle: {
       color: 'gray',
-      fontSize: 20,
+      fontSize: 10,
+    },
+    createShoppingList: {
+      textAlign: 'center',
+      color: 'white',
+      fontWeight: 'bold',
+      // marginLeft: 5,
+      // marginRight: 5,
+      // marginBottom: 5,
+      margin: 5,
     },
    
 /**********When List is Empty*******/
