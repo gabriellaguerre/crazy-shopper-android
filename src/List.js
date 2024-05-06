@@ -42,9 +42,9 @@ const returnItem = async (item) => {
 
 const returnStore = async (store) => {
   try {
-    console.log(store,'sssssssssss')
+    // console.log(store,'sssssssssss')
     const editStore = {id: store.id, name: store.name, description: store.description, isStore: true}
-    console.log(editStore, 'eeeeeeeeeeeee')
+    // console.log(editStore, 'eeeeeeeeeeeee')
     dispatch(updateStore(editStore))
     const updatedStores = stores.map(store=>store.id === editStore.id ? editStore : store)
     const jsonStoreValue = JSON.stringify(updatedStores)

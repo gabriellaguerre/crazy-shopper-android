@@ -8,6 +8,7 @@ import List from './src/List';
 import Done from './src/Done';
 import AddItemForm from './src/AddItemForm';
 import AddStoreForm from './src/AddStoreForm';
+import CreateShoppingListForm from './src/CreateShoppingListForm';
 import Stores from './src/Stores';
 import Splash from './src/Splash';
 import { selectAllItems } from './src/redux/itemsSlice';
@@ -45,7 +46,7 @@ function App() {
      
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarIcon: ({focused, size, color, r}) => {
+          tabBarIcon: ({focused, size, color}) => {
             let iconName;
             if(route.name==='Items') {
               iconName='list'
@@ -169,6 +170,11 @@ function StoresTabNavigator(){
         <Stack.Screen 
           name='Store'
           component={AddStoreForm}
+         />
+         <Stack.Screen 
+          name='Items List'
+          component={Items}
+          options={{headerShown: true}}
          />
       
       </Stack.Navigator>

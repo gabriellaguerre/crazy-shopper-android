@@ -7,7 +7,12 @@ import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './re
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function Items({navigation}) {
+function Items({navigation, route}) {
+  console.log(route.params, 'rrrrrrrrrr')
+ 
+  const { editStore } = route.params ? route.params : 0
+  console.log( editStore, 'tttttttttt')
+
   const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)

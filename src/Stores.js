@@ -4,12 +4,13 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 // import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
 import { selectAllStores, addStore, updateStore, deleteStore, deleteAll } from './redux/storesSlice';
-
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function Stores({navigation}) {
   const stores = useSelector(selectAllStores)
+  // const navigation = useNavigation();
   const dispatch = useDispatch()
   
   const [modalVisible, setModalVisible] = useState(false)
@@ -76,7 +77,8 @@ function Stores({navigation}) {
         
         const jsonStoreValue = JSON.stringify(updatedStores)
         await AsyncStorage.setItem('Stores', jsonStoreValue)
-        
+        console.log({ editStore}, 'ooooooooo')
+        navigation.navigate('Items List',{editStore})
     
       } catch (error) {
         console.log(error)
@@ -127,6 +129,7 @@ function Stores({navigation}) {
             </View>
             </View>
           </Modal>
+
          {newStores && newStores.length > 0 ? (
           <View style={styles.container}>
           <FlatList 
