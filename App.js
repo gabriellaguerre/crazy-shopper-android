@@ -174,7 +174,7 @@ function StoresTabNavigator(){
          <Stack.Screen 
           name='Items List'
           component={Items}
-          options={{headerShown: true}}
+          options={{headerShown: false}}
          />
       
       </Stack.Navigator>

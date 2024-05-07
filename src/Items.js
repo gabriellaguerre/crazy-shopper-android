@@ -3,6 +3,7 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatLis
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
+import { updateStore } from './redux/storesSlice';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -18,6 +19,8 @@ function Items({navigation, route}) {
   const [modalVisible, setModalVisible] = useState(false)
   const [thisId, setThisId] = useState('')
   const [thisItem, setThisItem] = useState('')
+  // const [currentStore, setCurrentStore] = useState('')
+  
 
  
   useEffect(()=>{
@@ -70,7 +73,7 @@ function Items({navigation, route}) {
    
     const addToShoppingList = async (item) => {
       try {
-        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price,isItem: false, isList: true, isDone: false, storeName: item.storeName}
+        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price,isItem: false, isList: true, isDone: false, storeName: editStore.name}
         dispatch(updateItem(editItem))
         const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
         
@@ -83,11 +86,15 @@ function Items({navigation, route}) {
       }    
        
     }
+    const goBack = () => {
+      const thisStore = {id: editStore.id, name: editStore.name, description: editStore.description, isStore: true}
+      dispatch(updateStore(thisStore))
+      navigation.goBack()
+    }
+
 
     const newItems = items.filter(item=> item.isItem === true).sort((a, b) => a.item.localeCompare(b.item));
     
-    
-
     return (
      
        <View style={styles.body}>
@@ -108,6 +115,20 @@ function Items({navigation, route}) {
             </View>
             </View>
           </Modal>
+          {editStore && (
+           <View>
+           <View style={styles.bothButtons}> 
+            <TouchableOpacity style={styles.goBackTouchable} onPress={()=>{goBack()}}>
+              <Image 
+                style={styles.goBackImage}
+                source={require('./assets/left-arrow-6424.png')}/>
+              {/* <Text style={styles.goBack}> Back </Text> */}
+              </TouchableOpacity>  
+            <TouchableOpacity style={styles.doneTouchable} ><Text style={styles.done}> Done </Text></TouchableOpacity>
+            </View>
+            <View style={styles.createShoppingListHeader}><Text style={styles.createShoppingList}>Choose Items For {editStore.name}</Text></View>
+            </View>
+          )}
          {newItems && newItems.length > 0 ? (
           <FlatList 
             data={newItems}
@@ -117,15 +138,27 @@ function Items({navigation, route}) {
                   <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
                   {/* <Text style={styles.subtitle}>{item.store}</Text> */}
                
-                  <View style={styles.buttonsContainer}>
+                <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>
-                  <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} />
+                  {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
+                <Image 
+                style={styles.addToCart}
+                // color={'green'}
+                source={require('./assets/add-to-cart-3046.png')}/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
-                  <FontAwesome5 name={'pen'} size={25} color={'#000080'} />
+                  {/* <FontAwesome5 name={'pen'} size={25} color={'#000080'} /> */}
+               <Image 
+                style={styles.addToCart}
+                // color={'green'}
+                source={require('./assets/pencil-5824.png')}/>
                 </TouchableOpacity>              
                 <TouchableOpacity onPress={()=>{setModalVisible(true); setThisId(item.id); setThisItem(item.item)}}>
-                  <FontAwesome5 name={'trash'} size={25} color={'red'} />
+                  {/* <FontAwesome5 name={'trash'} size={25} color={'red'} /> */}
+                <Image 
+                style={styles.addToCart}
+                // color={'green'}
+                source={require('./assets/trash-can-10417.png')}/>
                 </TouchableOpacity>
                 </View>
                 </View>                
@@ -166,7 +199,50 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       elevation: 5,
     },
-
+    createShoppingList: {
+      textAlign: 'center',
+      fontSize: 25,
+      fontWeight: 'bold',
+    },
+    createShoppingListHeader: {
+      
+    },
+    goBack: {
+      // marginLeft: 5,
+      // marginRight: 5,
+      margin: 5,
+    },
+    goBackImage: {
+      width: 30,
+      height: 30,
+      margin: 5,
+    },
+    goBackTouchable: {
+      // backgroundColor: 'yellow',
+      margin: 5,
+      borderRadius: 10,
+      flexDirection: 'row',
+    },
+    done: {
+      margin: 10,
+      color: 'white',
+      fontWeight: 'bold',
+    },
+    doneTouchable: {
+      margin: 5,
+      backgroundColor: 'green',
+      borderRadius: 10,
+    },
+    bothButtons: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    addToCart: {
+      width: 30,
+      height: 30,
+      margin: 5,
+  
+    },
 /*****Add Item Round Blue Button */    
     button: {
       width: 60,
