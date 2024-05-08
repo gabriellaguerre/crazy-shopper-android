@@ -15,7 +15,7 @@ function List() {
   
   const addToDoneList = async (item) => {
     try {
-      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: false, isList: false, isDone: true}
+      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: false, isList: false, isDone: true, storeName: ''}
       dispatch(updateItem(editItem))
       const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
       const jsonItemValue = JSON.stringify(updatedItems)
@@ -28,7 +28,7 @@ function List() {
 }
 const returnItem = async (item) => {
   try {
-    const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: true, isList: false, isDone: false}
+    const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: true, isList: false, isDone: false, storeName: ''}
     dispatch(updateItem(editItem))
     const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
     const jsonItemValue = JSON.stringify(updatedItems)
@@ -56,7 +56,7 @@ const returnStore = async (store) => {
  
 }
   
-  const newItems = items.filter(item=> item.isList === true)
+  const newItems = items.filter(item=> item.isList === true && item.storeName === '')
                         // .sort((a, b) => {
                         //   const storeComparison = a.store.localeCompare(b.store);
                         //   if(storeComparison !== 0) {
@@ -67,9 +67,30 @@ const returnStore = async (store) => {
                         .sort((a, b) => a.item.localeCompare(b.item))
 
   const newStores = stores.filter(store => store.isStore === false).sort((a,b)=> a.name.localeCompare(b.name))
-    return (
+  
+  const storeItems = (storeName) => {
+    return items.filter(item=> item.isList && item.storeName === storeName)
+                .sort((a, b) => a.item.localeCompare(b.item))
+                .map((item) => (
+                  <View style={styles.listContainer} key={item.id}>
+                  <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
+                  <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
+                  <View style={styles.buttonsContainer}>
+               <TouchableOpacity onPress={()=>{ returnItem(item)}}>
+                   <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
+               </TouchableOpacity>
+
+             <TouchableOpacity onPress={()=>{ addToDoneList(item); }}>
+               <FontAwesome5 name={'check'} size={25} color={'green'} />
+             </TouchableOpacity>
+             </View>
+                  </View>
+                ))}
+  
+  console.log(storeItems, 'ssssssssssss')
+  
+  return (
       <>
-     
       <View style={styles.body}>
       {newStores && newStores.length > 0 &&
        <FlatList 
@@ -78,6 +99,18 @@ const returnStore = async (store) => {
            <View style={styles.listContainer}>
              <Text style={styles.title} numberOfLines={1}>{item.name}</Text>
              <Text style={styles.subtitle} numberOfLines={1}> {item.description}</Text>
+             {storeItems(item.name)}
+            {/* <FlatList 
+              data={storeItems.filter(storeItem => storeItem.storeName === item.name)} 
+              renderItem = {({ item: nestedItem }) => (
+                <View style={styles.listContainer}>
+                <Text style={styles.title} numberOfLines={1}>{item.name} hello</Text>
+                </View>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+             /> */}
+             
+             
              {/* <Text style={styles.subtitle}>{item.store}</Text> */}
        
              <View style={styles.buttonsContainer}>
