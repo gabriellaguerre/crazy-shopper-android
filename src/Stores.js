@@ -3,7 +3,7 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatLis
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 // import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
-import { selectAllStores, addStore, updateStore, deleteStore, deleteAll } from './redux/storesSlice';
+import { selectAllStores, addStore, updateStore, deleteStore, deleteAllStores } from './redux/storesSlice';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -21,7 +21,7 @@ function Stores({navigation}) {
 
   // console.log(stores, 'sssssssssssss')
   useEffect(()=>{
-      dispatch(deleteAll(stores));
+      dispatch(deleteAllStores());
       getStores()
     },[])
 

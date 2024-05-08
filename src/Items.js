@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal, StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList, Image, Pressable} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
+import { selectAllItems, addItem, deleteAllItems, updateItem, deleteItem } from './redux/itemsSlice';
 import { updateStore } from './redux/storesSlice';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +24,7 @@ function Items({navigation, route}) {
 
  
   useEffect(()=>{
-      dispatch(deleteAll());
+      dispatch(deleteAllItems());
       getList()
     },[])
 
@@ -73,7 +73,7 @@ function Items({navigation, route}) {
    
     const addToShoppingList = async (item) => {
       try {
-        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price,isItem: false, isList: true, isDone: false, storeName: editStore.name}
+        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: false, isList: true, isDone: false, storeName: editStore ? editStore.name : ''}
         dispatch(updateItem(editItem))
         const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
         
@@ -86,9 +86,23 @@ function Items({navigation, route}) {
       }    
        
     }
+
+
+
     const goBack = () => {
       const thisStore = {id: editStore.id, name: editStore.name, description: editStore.description, isStore: true}
       dispatch(updateStore(thisStore))
+
+      const renewItems = items.filter(item => item.storeName === thisStore.name)
+      renewItems.forEach(async (item) => {
+      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: '', isItem: true, isList: false, isDone: false }
+      dispatch(updateItem(editItem))
+      const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
+      const jsonItemValue = JSON.stringify(updatedItems)
+      await AsyncStorage.setItem('Items', jsonItemValue)
+    })
+
+
       navigation.goBack()
     }
 
@@ -124,7 +138,7 @@ function Items({navigation, route}) {
                 source={require('./assets/left-arrow-6424.png')}/>
               {/* <Text style={styles.goBack}> Back </Text> */}
               </TouchableOpacity>  
-            <TouchableOpacity style={styles.doneTouchable} ><Text style={styles.done}> Done </Text></TouchableOpacity>
+            <TouchableOpacity style={styles.doneTouchable} onPress={()=>{navigation.goBack()}}><Text style={styles.done}> Done </Text></TouchableOpacity>
             </View>
             <View style={styles.createShoppingListHeader}><Text style={styles.createShoppingList}>Choose Items For {editStore.name}</Text></View>
             </View>

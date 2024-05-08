@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect} from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
-import { selectAllItems, updateItem } from './redux/itemsSlice';
-import { selectAllStores, updateStore } from './redux/storesSlice';
+import { selectAllItems, addItem, updateItem, deleteAllItems } from './redux/itemsSlice';
+import { selectAllStores, addStore, updateStore, deleteAllStores } from './redux/storesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -11,6 +11,62 @@ function List() {
   const items = useSelector(selectAllItems)
   const stores = useSelector(selectAllStores)
   const dispatch = useDispatch()
+
+  useEffect(()=>{
+    dispatch(deleteAllStores());
+    dispatch(deleteAllItems());
+    getList()
+    getStores()
+  },[])
+
+  console.log(stores, 'ssss')
+  console.log(items, 'iii')
+
+
+  const getStores = async () => {
+    try {
+       const jsonValue = await AsyncStorage.getItem('Stores')
+       if(jsonValue !== null){
+        const storesArray = JSON.parse(jsonValue)
+      
+        if(Array.isArray(storesArray)){
+          storesArray.forEach(obj => {
+        const thisStore = { id: obj.id, name: obj.name, description: obj.description, isStore: obj.isStore };
+        dispatch(addStore(thisStore));
+        });
+        } else {
+          console.error("Error loading items: Invalid data format")
+        }
+        
+       }
+    } catch (error) {
+      console.error('Error loading items:', error)
+      
+    }
+
+  }
+  const getList = async () => {
+    try {
+       const jsonValue = await AsyncStorage.getItem('Items')
+       if(jsonValue !== null){
+        const itemsArray = JSON.parse(jsonValue)
+      
+        if(Array.isArray(itemsArray)){
+          itemsArray.forEach(obj => {
+        const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, isItem:obj.isItem, isList: obj.isList, isDone: obj.isDone, storeName: obj.storeName };
+        dispatch(addItem(thisItem));
+        });
+        } else {
+          console.error("Error loading items: Invalid data format")
+        }
+        
+       }
+    } catch (error) {
+      console.error('Error loading items:', error)
+      
+    }
+
+  }
 
   
   const addToDoneList = async (item) => {
@@ -42,13 +98,23 @@ const returnItem = async (item) => {
 
 const returnStore = async (store) => {
   try {
-    // console.log(store,'sssssssssss')
+  
     const editStore = {id: store.id, name: store.name, description: store.description, isStore: true}
-    // console.log(editStore, 'eeeeeeeeeeeee')
     dispatch(updateStore(editStore))
     const updatedStores = stores.map(store=>store.id === editStore.id ? editStore : store)
     const jsonStoreValue = JSON.stringify(updatedStores)
     await AsyncStorage.setItem('Stores', jsonStoreValue)
+
+   
+    const renewItems = items.filter(item => item.storeName === store.name)
+    renewItems.forEach(async (item) => {
+      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: '', isItem: true, isList: false, isDone: false }
+      dispatch(updateItem(editItem))
+      const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
+      const jsonItemValue = JSON.stringify(updatedItems)
+      await AsyncStorage.setItem('Items', jsonItemValue)
+    })
+    
 
 } catch (error) {
   console.log(error)
@@ -87,7 +153,7 @@ const returnStore = async (store) => {
                   </View>
                 ))}
   
-  console.log(storeItems, 'ssssssssssss')
+  // console.log(storeItems, 'ssssssssssss')
   
   return (
       <>
@@ -100,27 +166,11 @@ const returnStore = async (store) => {
              <Text style={styles.title} numberOfLines={1}>{item.name}</Text>
              <Text style={styles.subtitle} numberOfLines={1}> {item.description}</Text>
              {storeItems(item.name)}
-            {/* <FlatList 
-              data={storeItems.filter(storeItem => storeItem.storeName === item.name)} 
-              renderItem = {({ item: nestedItem }) => (
-                <View style={styles.listContainer}>
-                <Text style={styles.title} numberOfLines={1}>{item.name} hello</Text>
-                </View>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-             /> */}
-             
-             
-             {/* <Text style={styles.subtitle}>{item.store}</Text> */}
        
              <View style={styles.buttonsContainer}>
-             <TouchableOpacity onPress={()=>{ returnStore(item)}}>
+             <TouchableOpacity onPress={()=>{returnStore(item)}}>
                  <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
              </TouchableOpacity>
-
-           <TouchableOpacity onPress={()=>{ addToDoneList(item); }}>
-             <FontAwesome5 name={'check'} size={25} color={'green'} />
-           </TouchableOpacity>
            </View>
            </View>                
        )}
@@ -151,15 +201,15 @@ const returnStore = async (store) => {
         />
 
       ):(
-        <View style={styles.imageBody}>
+        newStores && newStores.length === 0 && 
+         <View style={styles.imageBody}>
         <Image 
           style={styles.logo}
           source={require('./assets/fullyTransparentCart.png')}
         />
       </View>
+          
       )}
-  
-         
    </View>      
    </>
  )

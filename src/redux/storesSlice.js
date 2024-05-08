@@ -25,7 +25,7 @@ const storesSlice = createSlice({
                 return state.filter(store => store.id !== id);
 
         },
-        deleteAll(state) {
+        deleteAllStores(state) {
             return initialState  
         },
         // shoppingItems(state,action) {
@@ -37,6 +37,6 @@ const storesSlice = createSlice({
 
 export const selectAllStores = (state) => state.stores;
 
-export const { addStore, updateStore, deleteStore, deleteAll } = storesSlice.actions
+export const { addStore, updateStore, deleteStore, deleteAllStores } = storesSlice.actions
 
 export default storesSlice.reducer;

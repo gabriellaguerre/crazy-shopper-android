@@ -12,7 +12,7 @@ function DoneList({navigation}) {
   const resetItemsList = async () => {
     const renewItems = items.filter(item => item.isDone === true)
     renewItems.forEach(async (item) => {
-      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, store: item.store, isItem: true, isList: false, isDone: false }
+      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: '', isItem: true, isList: false, isDone: false }
       dispatch(updateItem(editItem))
       const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
       const jsonItemValue = JSON.stringify(updatedItems)
