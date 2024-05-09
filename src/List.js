@@ -19,8 +19,8 @@ function List() {
     getStores()
   },[])
 
-  console.log(stores, 'ssss')
-  console.log(items, 'iii')
+  // console.log(stores, 'ssss')
+  // console.log(items, 'iii')
 
 
   const getStores = async () => {
@@ -138,19 +138,19 @@ const returnStore = async (store) => {
     return items.filter(item=> item.isList && item.storeName === storeName)
                 .sort((a, b) => a.item.localeCompare(b.item))
                 .map((item) => (
-                  <View style={styles.listContainer} key={item.id}>
+                  <View style={styles.storeListContainer} key={item.id}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
-                  <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-                  <View style={styles.buttonsContainer}>
-               <TouchableOpacity onPress={()=>{ returnItem(item)}}>
+                  {/* <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text> */}
+                  {/* <View style={styles.buttonsContainer}> */}
+               {/* <TouchableOpacity onPress={()=>{ returnItem(item)}}>
                    <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
-               </TouchableOpacity>
+               </TouchableOpacity> */}
 
              <TouchableOpacity onPress={()=>{ addToDoneList(item); }}>
                <FontAwesome5 name={'check'} size={25} color={'green'} />
              </TouchableOpacity>
              </View>
-                  </View>
+                  // </View>
                 ))}
   
   // console.log(storeItems, 'ssssssssssss')
@@ -230,7 +230,10 @@ const styles = StyleSheet.create({
    borderRadius: 20,
    elevation: 5,
  },
-
+ storeListContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between'
+ },
 /*****Add Item Round Blue Button */    
  button: {
    width: 60,

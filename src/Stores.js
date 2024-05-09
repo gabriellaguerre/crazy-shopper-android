@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal, StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList, Image, Pressable} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
-// import { selectAllItems, addItem, deleteAll, updateItem, deleteItem } from './redux/itemsSlice';
+import { selectAllItems } from './redux/itemsSlice';
 import { selectAllStores, addStore, updateStore, deleteStore, deleteAllStores } from './redux/storesSlice';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Stores({navigation}) {
   const stores = useSelector(selectAllStores)
+  const items = useSelector(selectAllItems)
   // const navigation = useNavigation();
   const dispatch = useDispatch()
   
@@ -70,6 +71,7 @@ function Stores({navigation}) {
 
    
     const createShoppingList = async (store) => {
+      if(items.length > 0) {
       try {
         const editStore = {id: store.id, name: store.name, description: store.description, isStore:false }
         dispatch(updateStore(editStore))
@@ -84,7 +86,10 @@ function Stores({navigation}) {
         console.log(error)
       }    
        
+    } else {
+      Alert.alert('Do This First','You Need to Create An Items List Before Creating a Shopping List')
     }
+  }
     // filter(store=>store.isStore === true).
     const newStores = stores.filter(store=> store.isStore === true).sort((a, b) => a.name.localeCompare(b.name));
     // console.log(newStores, 'nnnnnnnnnnn')

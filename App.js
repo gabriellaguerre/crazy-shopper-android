@@ -24,6 +24,7 @@ function App() {
   const shoppingItems = useSelector(selectAllItems)
   const shoppingList = shoppingItems.filter(item=> item.isList === true)
   const doneList = shoppingItems.filter(item => item.isDone === true)
+  const itemsList = shoppingItems.filter(item=> item.isItem)
 
   const [isSplash, setIsSplash] = useState(true);
  
@@ -56,6 +57,7 @@ function App() {
                 iconName='store'
                 size = focused ? 25 : 20
                 color = focused ? 'green' : 'black'
+                
             }else if(route.name==='Grocery List') {
               iconName='cart-arrow-down'
               size = focused ? 25 : 20
@@ -73,8 +75,14 @@ function App() {
               />
             )
           },
-          // tabBarShowLabel: false,
-        }
+        //   tabBarLabelStyle: ({color})=> {
+        //     if(route.name==='Stores') {
+        //       // iconName='store'
+        //       // size = focused ? 25 : 20
+        //       color = focused ? 'green' : 'black'
+        //   }
+        // }
+      }
         )}
         
       >
@@ -82,7 +90,7 @@ function App() {
           name='Stores'
           component={StoresTabNavigator}
           options={{headerShown: false,
-                    tabBarLabelStyle: {fontSize: 15}}}
+                    tabBarLabelStyle: {fontSize: 15, color: 'green'}}}
         />
         <Tab.Screen 
           name='Grocery List'
@@ -111,7 +119,8 @@ function App() {
           name='Items'
           component={ItemsTabNavigator}
           options={{ headerShown: false,
-                    tabBarLabelStyle: {fontSize: 15} }}
+                    tabBarLabelStyle: {fontSize: 15},
+                    tabBarBadge: itemsList.length ? itemsList.length :  null, }}
         />
     </Tab.Navigator>  
       )}

@@ -9,10 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function Items({navigation, route}) {
-  console.log(route.params, 'rrrrrrrrrr')
+  // console.log(route.params, 'rrrrrrrrrr')
  
   const { editStore } = route.params ? route.params : 0
-  console.log( editStore, 'tttttttttt')
+  // console.log( editStore, 'tttttttttt')
 
   const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
@@ -119,7 +119,7 @@ function Items({navigation, route}) {
           onRequestClose={()=>setModalVisible(!modalVisible)}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                 <Text style={styles.modalText}>Do you want to delete the {thisItem}?</Text>
+                 <Text style={styles.modalText}>Do you want to delete {thisItem}?</Text>
             <View style={styles.modalButtonsContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={()=>setModalVisible(!modalVisible)}>
               <Text style={styles.cancelText}>Cancel</Text></TouchableOpacity>
@@ -147,27 +147,44 @@ function Items({navigation, route}) {
           <FlatList 
             data={newItems}
             renderItem={({ item }) => (
-                <View style={styles.listContainer}>
+              
+                <View >
+                  {/* <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
+                  <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text> */}
+                  {/* <Text style={styles.subtitle}>{item.store}</Text> */}
+                {editStore ? (
+                  <View style={styles.storeListContainer}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
                   <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-                  {/* <Text style={styles.subtitle}>{item.store}</Text> */}
-               
-                <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>
+                   <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>
                   {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
                 <Image 
                 style={styles.addToCart}
                 // color={'green'}
                 source={require('./assets/add-to-cart-3046.png')}/>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{navigateToAddItemForm(item)}}>
+                  </View>
+                ):(
+                  <View style={styles.listContainer}>
+                  <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
+                  <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
+                <View style={styles.buttonsContainer}>
+                <TouchableOpacity  onPress={()=>{addToShoppingList(item); }}>
+                  {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
+                <Image 
+                style={styles.addToCart}
+                // color={'green'}
+                source={require('./assets/add-to-cart-3046.png')}/>
+                </TouchableOpacity>
+                
+                <TouchableOpacity  onPress={()=>{navigateToAddItemForm(item)}}>
                   {/* <FontAwesome5 name={'pen'} size={25} color={'#000080'} /> */}
                <Image 
                 style={styles.addToCart}
                 // color={'green'}
                 source={require('./assets/pencil-5824.png')}/>
                 </TouchableOpacity>              
-                <TouchableOpacity onPress={()=>{setModalVisible(true); setThisId(item.id); setThisItem(item.item)}}>
+                <TouchableOpacity  onPress={()=>{setModalVisible(true); setThisId(item.id); setThisItem(item.item)}}>
                   {/* <FontAwesome5 name={'trash'} size={25} color={'red'} /> */}
                 <Image 
                 style={styles.addToCart}
@@ -175,6 +192,10 @@ function Items({navigation, route}) {
                 source={require('./assets/trash-can-10417.png')}/>
                 </TouchableOpacity>
                 </View>
+                </View>
+                )}
+              
+
                 </View>                
             )}
             keyExtractor={(item, index) => index.toString()}
@@ -186,11 +207,20 @@ function Items({navigation, route}) {
           style={styles.logo}
           source={require('./assets/list.png')}
         />
-         <Text>NO ITEMS ARE ADDED YET</Text>
+        {editStore && newItems.length === 0? (
+          <View>
+            <Text>PLEASE CREATE AN ITEMS LIST</Text>
+          </View>
+        ):(
+          <>
+          <Text>NO ITEMS ARE ADDED YET</Text>
         <Text>CLICK ON THE PLUS BUTTON ON TOP OR BELOW</Text>
         <View style={styles.touchContainer}><TouchableOpacity style={styles.buttonEmpty} onPress={()=>{navigation.navigate('Item')}} >
                      <FontAwesome5 name={'plus'} size={20} color={'white'}/>
                     </TouchableOpacity></View>
+                    </>
+        )}
+         
       </View>
          )}
      
@@ -203,6 +233,20 @@ const styles = StyleSheet.create({
       backgroundColor: '#C0C0C0',
     },
     listContainer: {
+      justifyContent: 'space-between',
+      marginHorizontal: 40,
+      width: '90%',
+      margin: 10,
+      alignSelf: 'center',
+      backgroundColor: 'white',
+      paddingLeft: 10,
+      paddingRight: 10,
+      borderRadius: 20,
+      elevation: 5,
+    },
+    storeListContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
       marginHorizontal: 40,
       width: '90%',
       margin: 10,
@@ -273,10 +317,15 @@ const styles = StyleSheet.create({
     }, 
     buttonsContainer: {
       flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      margin: 10,
+      // alignItems: 'space-between',
+      justifyContent: 'space-around',
+      // marginHorizontal: 40,
+      // paddingHorizontal: 10,
+      // marginRight: 80,
      
+    },
+    eachButton: {
+      marginHorizontal: 15,
     },
     title: {
       color: 'black',
