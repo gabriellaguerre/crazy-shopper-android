@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Modal, StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatList, Image, Pressable} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAllItems } from './redux/itemsSlice';
+import { selectAllItems, addItem } from './redux/itemsSlice';
 import { selectAllStores, addStore, updateStore, deleteStore, deleteAllStores } from './redux/storesSlice';
+import { CommonActions } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -19,12 +20,26 @@ function Stores({navigation}) {
   const [thisStoreId, setThisStoreId] = useState('')
   const [thisStore, setThisStore] = useState('')
   const [editThisStore, setEditThisStore] = useState({})
+  const [resetStack, setResetStack] = useState(false)
 
   // console.log(stores, 'sssssssssssss')
   useEffect(()=>{
       dispatch(deleteAllStores());
       getStores()
+      getList()
     },[])
+
+    // useEffect(()=> {
+    //   if(resetStack) {
+    //     navigation.dispatch(CommonActions.reset({
+    //       index: 0,
+    //       routes: [{name: 'Stores List'}]
+    //     })
+    //   )
+    //   setResetStack(false)
+    //   }
+
+    // },[resetStack, navigation])
 
     const getStores = async () => {
       try {
@@ -49,7 +64,29 @@ function Stores({navigation}) {
   
     }
  
-    
+    const getList = async () => {
+      try {
+         const jsonValue = await AsyncStorage.getItem('Items')
+         if(jsonValue !== null){
+          const itemsArray = JSON.parse(jsonValue)
+        
+          if(Array.isArray(itemsArray)){
+            itemsArray.forEach(obj => {
+          const thisItem = { id: obj.id, item: obj.item, desc: obj.desc, price: obj.price, isItem:obj.isItem, isList: obj.isList, isDone: obj.isDone, storeName: obj.storeName };
+          dispatch(addItem(thisItem));
+          });
+          } else {
+            console.error("Error loading items: Invalid data format")
+          }
+          
+         }
+      } catch (error) {
+        console.error('Error loading items:', error)
+        
+      }
+  
+    }
+ 
     const removeStore = async (id) => {
       try {
         // console.log(id, 'iiiiiiiiiiiiiii')
@@ -79,7 +116,7 @@ function Stores({navigation}) {
         
         const jsonStoreValue = JSON.stringify(updatedStores)
         await AsyncStorage.setItem('Stores', jsonStoreValue)
-        console.log({ editStore}, 'ooooooooo')
+        // console.log({ editStore}, 'ooooooooo')
         navigation.navigate('Items List',{editStore})
     
       } catch (error) {

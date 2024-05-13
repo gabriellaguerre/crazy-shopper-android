@@ -3,18 +3,20 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View, Button, Alert, FlatLis
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllItems, addItem, deleteAllItems, updateItem, deleteItem } from './redux/itemsSlice';
-import { updateStore } from './redux/storesSlice';
+import { updateStore, selectAllStores } from './redux/storesSlice';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function Items({navigation, route}) {
+function Items({navigation, route, handleDoneClick}) {
   // console.log(route.params, 'rrrrrrrrrr')
  
   const { editStore } = route.params ? route.params : 0
   // console.log( editStore, 'tttttttttt')
 
   const items = useSelector(selectAllItems)
+  const stores = useSelector(selectAllStores)
+
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const [thisId, setThisId] = useState('')
@@ -73,7 +75,7 @@ function Items({navigation, route}) {
    
     const addToShoppingList = async (item) => {
       try {
-        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: false, isList: true, isDone: false, storeName: editStore ? editStore.name : ''}
+        const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: false, isList: true, isDone: false, storeName: editStore ? editStore.name : null}
         dispatch(updateItem(editItem))
         const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
         
@@ -86,25 +88,105 @@ function Items({navigation, route}) {
       }    
        
     }
-
-
-
-    const goBack = () => {
-      const thisStore = {id: editStore.id, name: editStore.name, description: editStore.description, isStore: true}
-      dispatch(updateStore(thisStore))
-
-      const renewItems = items.filter(item => item.storeName === thisStore.name)
-      renewItems.forEach(async (item) => {
-      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: '', isItem: true, isList: false, isDone: false }
-      dispatch(updateItem(editItem))
-      const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
-      const jsonItemValue = JSON.stringify(updatedItems)
-      await AsyncStorage.setItem('Items', jsonItemValue)
-    })
-
-
+    const handleDone = () => {
+      navigation.navigate('Grocery List')
       navigation.goBack()
+      // navigation.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{ name: 'Stores List' }],
+      //   })
+      // );
+      
     }
+    const returnStore = async (store) => {
+      try {
+      
+        const editStore = {id: store.id, name: store.name, description: store.description, isStore: true}
+        dispatch(updateStore(editStore))
+        const updatedStores = stores.map(store=>store.id === editStore.id ? editStore : store)
+        const jsonStoreValue = JSON.stringify(updatedStores)
+        await AsyncStorage.setItem('Stores', jsonStoreValue)
+    
+       
+        // const renewItems = items.filter(item => item.storeName === store.name)
+        // renewItems.forEach(async (item) => {
+        //   const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: null, isItem: true, isList: false, isDone: false }
+        //   dispatch(updateItem(editItem))
+        //   const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
+        //   const jsonItemValue = JSON.stringify(updatedItems)
+        //   await AsyncStorage.setItem('Items', jsonItemValue)
+        // })
+        
+    
+    } catch (error) {
+      console.log(error)
+    }    
+     
+    }
+    const returnItems = async () => {
+      try {
+        console.log(items, 'items in return items')
+         const renewItems = items.filter(item => item.storeName === editStore.name)
+         renewItems.map(async (item) => {
+          const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: null, isItem: true, isList: false, isDone: false }
+          dispatch(updateItem(editItem))
+          const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
+          const jsonItemValue = JSON.stringify(updatedItems)
+          await AsyncStorage.setItem('Items', jsonItemValue)
+        })
+
+        // const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: true, isList: false, isDone: false, storeName: null}
+        // dispatch(updateItem(editItem))
+        // const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
+        // const jsonItemValue = JSON.stringify(updatedItems)
+        // await AsyncStorage.setItem('Items', jsonItemValue)
+    
+    } catch (error) {
+      console.log(error)
+    }    
+     
+    }
+
+  //   const goBack = async () => {
+  //     const thisStore = {id: editStore.id, name: editStore.name, description: editStore.description, isStore: true}
+  //     dispatch(updateStore(thisStore))
+  //     let count = 0
+  //     const renewItems = items.filter(item => item.storeName === thisStore.name)
+  //     // console.log(renewItems, 'renew items')
+
+   
+  //     for (let i = 0; i < renewItems.length; i++){
+  //       let currentItem = renewItems[i]
+  //       // console.log(trial, 'fffff')
+  //       const newTrial = {id: currentItem.id, item: currentItem.item, desc: currentItem.desc, price: currentItem.price, storeName: null, isItem: true, isList: false, isDone: false}
+  //       // console.log(newTrial, 'f2f2')
+  //       dispatch(updateItem(newTrial))
+  //       const updatedItems = items.map(item=>item.id === newTrial.id ? newTrial : item)
+  //       const jsonItemValue = JSON.stringify(updatedItems)
+  //       await AsyncStorage.setItem('Items', jsonItemValue)
+  //       ++count
+  //    }
+  //   //  console.log(count, count === renewItems.length, renewItems.length, 'ccc')
+  //    if(count === renewItems.length) {
+  //     console.log(items, 'ITEMS LIST AFTER COUNT')  
+  //     navigation.goBack();
+  //  }
+     
+      
+    //  console.log(count, 'ccc')
+     
+    //   renewItems.map(async (item) => {
+    //      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: '', isItem: true, isList: false, isDone: false }
+    //      await dispatch(updateItem(editItem))
+    //      count++
+    //      const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
+    //      const jsonItemValue = JSON.stringify(updatedItems)
+    //      await AsyncStorage.setItem('Items', jsonItemValue)
+    // });
+    // console.log(count, 'cccccc')
+    // navigation.goBack()     
+    // }
 
 
     const newItems = items.filter(item=> item.isItem === true).sort((a, b) => a.item.localeCompare(b.item));
@@ -132,13 +214,13 @@ function Items({navigation, route}) {
           {editStore && (
            <View>
            <View style={styles.bothButtons}> 
-            <TouchableOpacity style={styles.goBackTouchable} onPress={()=>{goBack()}}>
+            {/* <TouchableOpacity style={styles.goBackTouchable} onPress={()=>{returnItems().then(()=>returnStore(editStore).then(()=>navigation.goBack()))}}>
               <Image 
                 style={styles.goBackImage}
                 source={require('./assets/left-arrow-6424.png')}/>
-              {/* <Text style={styles.goBack}> Back </Text> */}
-              </TouchableOpacity>  
-            <TouchableOpacity style={styles.doneTouchable} onPress={()=>{navigation.goBack()}}><Text style={styles.done}> Done </Text></TouchableOpacity>
+          
+              </TouchableOpacity>   */}
+            <TouchableOpacity style={styles.doneTouchable} onPress={()=>handleDone()}><Text style={styles.done}> Done </Text></TouchableOpacity>
             </View>
             <View style={styles.createShoppingListHeader}><Text style={styles.createShoppingList}>Choose Items For {editStore.name}</Text></View>
             </View>
@@ -159,7 +241,7 @@ function Items({navigation, route}) {
                    <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>
                   {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
                 <Image 
-                style={styles.addToCart}
+                style={styles.storeAddToCart}
                 // color={'green'}
                 source={require('./assets/add-to-cart-3046.png')}/>
                 </TouchableOpacity>
@@ -249,13 +331,20 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       marginHorizontal: 40,
       width: '90%',
-      margin: 10,
+      height: 80,
+      margin: 20,
+      alignItems: 'center',
       alignSelf: 'center',
       backgroundColor: 'white',
       paddingLeft: 10,
       paddingRight: 10,
       borderRadius: 20,
       elevation: 5,
+    },
+    storeAddToCart: {
+      width: 30,
+      height: 30,
+      marginRight: 10,
     },
     createShoppingList: {
       textAlign: 'center',

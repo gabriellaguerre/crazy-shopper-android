@@ -120,7 +120,8 @@ function App() {
           component={ItemsTabNavigator}
           options={{ headerShown: false,
                     tabBarLabelStyle: {fontSize: 15},
-                    tabBarBadge: itemsList.length ? itemsList.length :  null, }}
+                    tabBarBadge: itemsList.length ? itemsList.length :  null, 
+                    }}
         />
     </Tab.Navigator>  
       )}

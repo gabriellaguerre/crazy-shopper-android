@@ -20,7 +20,7 @@ function List() {
   },[])
 
   // console.log(stores, 'ssss')
-  // console.log(items, 'iii')
+//  console.log(items, 'iii')
 
 
   const getStores = async () => {
@@ -69,9 +69,9 @@ function List() {
   }
 
   
-  const addToDoneList = async (item) => {
+  const addToItemList = async (item) => {
     try {
-      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: false, isList: false, isDone: true, storeName: ''}
+      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: null, isItem: true, isList: false, isDone: false}
       dispatch(updateItem(editItem))
       const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
       const jsonItemValue = JSON.stringify(updatedItems)
@@ -84,7 +84,7 @@ function List() {
 }
 const returnItem = async (item) => {
   try {
-    const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: true, isList: false, isDone: false, storeName: ''}
+    const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: true, isList: false, isDone: false, storeName: null}
     dispatch(updateItem(editItem))
     const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
     const jsonItemValue = JSON.stringify(updatedItems)
@@ -108,7 +108,7 @@ const returnStore = async (store) => {
    
     const renewItems = items.filter(item => item.storeName === store.name)
     renewItems.forEach(async (item) => {
-      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: '', isItem: true, isList: false, isDone: false }
+      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: null, isItem: true, isList: false, isDone: false }
       dispatch(updateItem(editItem))
       const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
       const jsonItemValue = JSON.stringify(updatedItems)
@@ -132,6 +132,8 @@ const returnStore = async (store) => {
                         // })
                         .sort((a, b) => a.item.localeCompare(b.item))
 
+
+
   const newStores = stores.filter(store => store.isStore === false).sort((a,b)=> a.name.localeCompare(b.name))
   
   const storeItems = (storeName) => {
@@ -146,7 +148,7 @@ const returnStore = async (store) => {
                    <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
                </TouchableOpacity> */}
 
-             <TouchableOpacity onPress={()=>{ addToDoneList(item); }}>
+             <TouchableOpacity onPress={()=>{ addToItemList(item); }}>
                <FontAwesome5 name={'check'} size={25} color={'green'} />
              </TouchableOpacity>
              </View>
@@ -191,7 +193,7 @@ const returnStore = async (store) => {
                    <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
                </TouchableOpacity>
 
-             <TouchableOpacity onPress={()=>{ addToDoneList(item); }}>
+             <TouchableOpacity onPress={()=>{ addToItemList(item); }}>
                <FontAwesome5 name={'check'} size={25} color={'green'} />
              </TouchableOpacity>
              </View>
