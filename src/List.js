@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react'
+import React, { useEffect, useState} from 'react'
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import { selectAllItems, addItem, updateItem, deleteAllItems } from './redux/itemsSlice';
 import { selectAllStores, addStore, updateStore, deleteAllStores } from './redux/storesSlice';
@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 
-function List() {
+function List({navigation}) {
   const items = useSelector(selectAllItems)
   const stores = useSelector(selectAllStores)
   const dispatch = useDispatch()
@@ -18,10 +18,8 @@ function List() {
     getList()
     getStores()
   },[])
-
-  // console.log(stores, 'ssss')
-//  console.log(items, 'iii')
-
+  
+  // const [store, setStore] = useState('')
 
   const getStores = async () => {
     try {
@@ -96,24 +94,29 @@ const returnItem = async (item) => {
  
 }
 
-const returnStore = async (store) => {
-  try {
-  
-    const editStore = {id: store.id, name: store.name, description: store.description, isStore: true}
-    dispatch(updateStore(editStore))
-    const updatedStores = stores.map(store=>store.id === editStore.id ? editStore : store)
-    const jsonStoreValue = JSON.stringify(updatedStores)
-    await AsyncStorage.setItem('Stores', jsonStoreValue)
 
-   
-    const renewItems = items.filter(item => item.storeName === store.name)
-    renewItems.forEach(async (item) => {
-      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: null, isItem: true, isList: false, isDone: false }
-      dispatch(updateItem(editItem))
-      const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
-      const jsonItemValue = JSON.stringify(updatedItems)
-      await AsyncStorage.setItem('Items', jsonItemValue)
-    })
+const returnStore = async (storeName) => {
+  try {
+      console.log(storeName, 'nnn')
+      console.log(stores, 'sss')
+      const findStore = stores.find(store => store.name === storeName)
+      console.log(findStore, 'FInd Store')
+      console.log(findStore.id,' id')
+      const editStore = {id: findStore.id, name: findStore.name, description: findStore.description, isStore: true}
+      console.log(editStore, 'Edited Store')
+
+       dispatch(updateStore(editStore))
+      
+       const updatedStores = stores.map(store=>store.id === editStore.id ? editStore : store)
+      //  console.log(updatedStores, 'Udpated Store')
+
+       const jsonStoreValue = JSON.stringify(updatedStores)
+      //  console.log(jsonStoreValue, 'JSON Store Value')
+
+       await AsyncStorage.setItem('Stores', jsonStoreValue)
+      //  console.log('Store updated in AsycStorage ')
+
+      //  navigation.navigate('Stores')
     
 
 } catch (error) {
@@ -122,14 +125,7 @@ const returnStore = async (store) => {
  
 }
   
-  const newItems = items.filter(item=> item.isList === true && item.storeName === '')
-                        // .sort((a, b) => {
-                        //   const storeComparison = a.store.localeCompare(b.store);
-                        //   if(storeComparison !== 0) {
-                        //     return storeComparison
-                        //   }
-                        //   return a.item.localeCompare(b.item);
-                        // })
+  const newItems = items.filter(item=> item.isList === true && item.storeName === null)
                         .sort((a, b) => a.item.localeCompare(b.item))
 
 
@@ -137,25 +133,38 @@ const returnStore = async (store) => {
   const newStores = stores.filter(store => store.isStore === false).sort((a,b)=> a.name.localeCompare(b.name))
   
   const storeItems = (storeName) => {
-    return items.filter(item=> item.isList && item.storeName === storeName)
+    console.log(storeName, 'stststs')
+    const filteredItems = items.filter(item => item.isList && item.storeName === storeName);
+    console.log(filteredItems, 'filtered items')
+   
+
+    if (filteredItems.length === 0) {
+      console.log(storeName, 'storename')
+    
+        return  (
+      <View style={styles.buttonsContainer}>
+      <TouchableOpacity onPress={()=>{returnStore(storeName)}}>
+          <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
+      </TouchableOpacity>
+    </View> // or any other message or component
+      )
+    }
+        
+    return filteredItems
                 .sort((a, b) => a.item.localeCompare(b.item))
                 .map((item) => (
                   <View style={styles.storeListContainer} key={item.id}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
-                  {/* <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text> */}
-                  {/* <View style={styles.buttonsContainer}> */}
-               {/* <TouchableOpacity onPress={()=>{ returnItem(item)}}>
-                   <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
-               </TouchableOpacity> */}
-
+      
              <TouchableOpacity onPress={()=>{ addToItemList(item); }}>
                <FontAwesome5 name={'check'} size={25} color={'green'} />
              </TouchableOpacity>
              </View>
-                  // </View>
-                ))}
+               
+                ))
+ }
   
-  // console.log(storeItems, 'ssssssssssss')
+ 
   
   return (
       <>
@@ -167,13 +176,17 @@ const returnStore = async (store) => {
            <View style={styles.listContainer}>
              <Text style={styles.title} numberOfLines={1}>{item.name}</Text>
              <Text style={styles.subtitle} numberOfLines={1}> {item.description}</Text>
-             {storeItems(item.name)}
-       
-             <View style={styles.buttonsContainer}>
-             <TouchableOpacity onPress={()=>{returnStore(item)}}>
+              {storeItems(item.name)}
+           
+              
+         
+                 {/* <View style={styles.buttonsContainer}>
+                <TouchableOpacity onPress={()=>{returnStore(item)}}>
                  <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
-             </TouchableOpacity>
-           </View>
+                 </TouchableOpacity>
+              </View>  */}
+              
+             
            </View>                
        )}
        keyExtractor={(item, index) => index.toString()}

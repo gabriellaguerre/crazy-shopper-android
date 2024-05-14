@@ -374,15 +374,20 @@ const styles = StyleSheet.create({
       margin: 10,
       color: 'white',
       fontWeight: 'bold',
+      textAlign: 'center',
     },
     doneTouchable: {
       margin: 5,
       backgroundColor: 'green',
       borderRadius: 10,
+      width: '30%',
+      alignSelf: 'flex-end'  
+
     },
     bothButtons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+   
+      // flexDirection: 'row',
+      // justifyContent: '',
     },
     addToCart: {
       width: 30,
