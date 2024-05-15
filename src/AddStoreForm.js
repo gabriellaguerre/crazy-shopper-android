@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   editButton: {
-    backgroundColor: '#000080', 
+    backgroundColor: '#275214', 
     borderRadius: 20, 
     margin: 20,
   },
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addButton: {
-    backgroundColor: 'green', 
+    backgroundColor: '#275214', 
     borderRadius: 20, 
     margin: 20,
   }

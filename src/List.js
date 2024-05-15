@@ -98,7 +98,7 @@ const returnItem = async (item) => {
 const returnStore = async (storeName) => {
   try {
       // console.log(storeName, 'nnn')
-      console.log(stores, 'sss')
+      // console.log(stores, 'sss')
       const findStore = stores.find(store => store.name === storeName)
       // console.log(findStore, 'FInd Store')
       // console.log(findStore.id,' id')
@@ -153,9 +153,10 @@ const returnStore = async (storeName) => {
         
     return filteredItems
                 .sort((a, b) => a.item.localeCompare(b.item))
-                .map((item) => (
-                  <View style={styles.storeListContainer} key={item.id}>
-                  <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
+                .map((item, index) => (
+                  <View key={item.id}>
+                  <View style={styles.storeListContainer}>
+                  <Text style={styles.storeListContainerTitle} numberOfLines={1}>{item.item}</Text>
       
              <TouchableOpacity onPress={()=>{ addToItemList(item); }}>
              <Image 
@@ -164,7 +165,9 @@ const returnStore = async (storeName) => {
                {/* <FontAwesome5 name={'check'} size={25} color={'green'} /> */}
              </TouchableOpacity>
              </View>
-               
+             {index < filteredItems.length - 1 && <View style={styles.separator} />} 
+             </View>
+                          
                 ))
  }
   
@@ -178,7 +181,7 @@ const returnStore = async (storeName) => {
        data={newStores}
        renderItem={({ item }) => (
            <View style={styles.listContainer}>
-             <Text style={styles.title} numberOfLines={1}>{item.name}</Text>
+             <Text style={styles.storeTitle} numberOfLines={1}>{item.name}</Text>
              <Text style={styles.subtitle} numberOfLines={1}> {item.description}</Text>
               {storeItems(item.name)}
            
@@ -227,7 +230,7 @@ const returnStore = async (storeName) => {
 const styles = StyleSheet.create({
  body: {
    flex: 1,
-   backgroundColor: '#f6b4c1',
+   backgroundColor: '#C0C0C0',
  },
  listContainer: {
    marginHorizontal: 40,
@@ -242,20 +245,50 @@ const styles = StyleSheet.create({
  },
  storeListContainer: {
   flexDirection: 'row',
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
+  marginBottom: 10,
+  marginTop: 10,
  },
+ separator: {
+  height: 1,
+  backgroundColor: 'gray',
+  marginVertical: 10,
+ },
+
  returnStoreButton: {
   flexDirection: 'row',
+  marginBottom: 5,
  },
  returnStore: {
   color: 'blue',
   marginLeft: 10,
   marginTop: 2,
+  marginBottom: 5,
  },
  addToCart: {
   width: 30,
   height: 30,
   margin: 5,
+},
+storeTitle: {
+  color: 'black',
+  fontSize: 30,
+  alignSelf: 'center',
+  textAlign: 'center',
+  backgroundColor: '#b5cbde',
+  width: '100%',
+  borderRadius: 10,
+  marginTop: 10,
+  elevation: 5,
+},
+storeListContainerTitle: {
+ color: 'black',
+ fontSize: 20,
+},
+
+subtitle: {
+  color: 'gray',
+  fontSize: 20,
 },
 /*****Add Item Round Blue Button */    
  button: {
@@ -277,15 +310,7 @@ const styles = StyleSheet.create({
    margin: 10,
   
  },
- title: {
-   color: 'black',
-   fontSize: 30,
-   alignSelf: 'center',
- },
- subtitle: {
-   color: 'gray',
-   fontSize: 20,
- },
+ 
 
 /**********When List is Empty*******/
  empty: {
@@ -312,7 +337,7 @@ imageBody: {
   flex: 1,
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#f6b4c1'
+  backgroundColor: '#C0C0C0'
 },
  
 });

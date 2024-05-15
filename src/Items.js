@@ -9,11 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function Items({navigation, route, handleDoneClick}) {
-  // console.log(route.params, 'rrrrrrrrrr')
+ 
  
   const { editStore } = route.params ? route.params : 0
-  // console.log( editStore, 'tttttttttt')
-
+ 
   const items = useSelector(selectAllItems)
   const stores = useSelector(selectAllStores)
 
@@ -90,15 +89,9 @@ function Items({navigation, route, handleDoneClick}) {
     }
     const handleDone = () => {
       navigation.navigate('Grocery List')
-      navigation.goBack()
-      // navigation.dispatch(
-      //   CommonActions.reset({
-      //     index: 0,
-      //     routes: [{ name: 'Stores List' }],
-      //   })
-      // );
-      
+      navigation.goBack() 
     }
+
     const returnStore = async (store) => {
       try {
       
@@ -377,7 +370,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
     },
     doneTouchable: {
-      margin: 5,
+      margin: 10,
       backgroundColor: 'green',
       borderRadius: 10,
       width: '30%',

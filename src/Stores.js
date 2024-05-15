@@ -130,6 +130,8 @@ function Stores({navigation}) {
     // filter(store=>store.isStore === true).
     const newStores = stores.filter(store=> store.isStore === true).sort((a, b) => a.name.localeCompare(b.name));
     // console.log(newStores, 'nnnnnnnnnnn')
+    const hasStores = stores.length > 0
+    const hasVisibleStores = newStores.length > 0;
     
     
 
@@ -174,7 +176,10 @@ function Stores({navigation}) {
             </View>
           </Modal>
 
-         {newStores && newStores.length > 0 ? (
+         {hasStores && !hasVisibleStores ? (
+            <View style={styles.blankScreen}/>
+          ):(
+          hasVisibleStores ? (
           <View style={styles.container}>
           <FlatList 
             data={newStores}
@@ -194,12 +199,7 @@ function Stores({navigation}) {
                   {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
                   <Text style={styles.createShoppingList}>Create Shopping List</Text>
                 </TouchableOpacity>
-                {/* <TouchableOpacity onPress={()=>{navigateToAddStoreForm(store)}}>
-                  <FontAwesome5 name={'pen'} size={25} color={'#000080'} />
-                </TouchableOpacity>              
-                <TouchableOpacity onPress={()=>{setModalVisible(true); setThisStoreId(store.id); setThisStore(store.name)}}>
-                  <FontAwesome5 name={'trash'} size={25} color={'red'} />
-                </TouchableOpacity> */}
+             
                 </View>
                 </View>                
             )}
@@ -218,9 +218,11 @@ function Stores({navigation}) {
                      <FontAwesome5 name={'plus'} size={20} color={'white'}/>
                     </TouchableOpacity></View>
       </View>
+         )
          )}
      
       </View>      
+        
     )
 }
 const styles = StyleSheet.create({
@@ -232,7 +234,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#C0C0C0', // Set the background color if needed
+      backgroundColor: '#C0C0C0', 
     },
     listContainer: {
       marginHorizontal: 20,
@@ -276,6 +278,7 @@ const styles = StyleSheet.create({
       marginBottom: 10,
       backgroundColor: '#6497b1',
       borderRadius: 5,
+      elevation: 5,
       
     },
     title: {

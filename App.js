@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Items from './src/Items';
 import List from './src/List';
-import Done from './src/Done';
+// import Done from './src/Done';
 import AddItemForm from './src/AddItemForm';
 import AddStoreForm from './src/AddStoreForm';
 import CreateShoppingListForm from './src/CreateShoppingListForm';
@@ -23,7 +23,7 @@ const Stack = createStackNavigator()
 function App() {
   const shoppingItems = useSelector(selectAllItems)
   const shoppingList = shoppingItems.filter(item=> item.isList === true)
-  const doneList = shoppingItems.filter(item => item.isDone === true)
+  // const doneList = shoppingItems.filter(item => item.isDone === true)
   const itemsList = shoppingItems.filter(item=> item.isItem)
 
   const [isSplash, setIsSplash] = useState(true);
@@ -52,21 +52,22 @@ function App() {
             if(route.name==='Items') {
               iconName='list'
               size = focused ? 25 : 20
-              color = focused ? 'blue' : 'black'
+              // color = focused ? 'blue' : 'black'
             } else if(route.name==='Stores') {
                 iconName='store'
                 size = focused ? 25 : 20
-                color = focused ? 'green' : 'black'
+                // color = focused ? 'green' : 'black'
                 
             }else if(route.name==='Grocery List') {
               iconName='cart-arrow-down'
               size = focused ? 25 : 20
-              color = focused ? 'red' : 'black'
-            } else if(route.name==='Done List') {
-              iconName='check-square'
-              size = focused ? 25 : 20
-              color = focused ? '#2F4F4F' : 'black'
-            } 
+              // color = focused ? '#7b5a60' : 'black'
+            }
+            // } else if(route.name==='Done List') {
+            //   iconName='check-square'
+            //   size = focused ? 25 : 20
+            //   color = focused ? '#2F4F4F' : 'black'
+            // } 
             return(
               <FontAwesome5 
                 name={iconName}
@@ -75,6 +76,11 @@ function App() {
               />
             )
           },
+          // tabBarOptions={
+          //   activeTintColor: 'blue',
+          //   inactiveTintColor: 'gray'
+
+          // }}
         //   tabBarLabelStyle: ({color})=> {
         //     if(route.name==='Stores') {
         //       // iconName='store'
@@ -90,21 +96,21 @@ function App() {
           name='Stores'
           component={StoresTabNavigator}
           options={{headerShown: false,
-                    tabBarLabelStyle: {fontSize: 15, color: 'green'}}}
+                    tabBarLabelStyle: {fontSize: 15}}}
         />
         <Tab.Screen 
           name='Grocery List'
           component={List} 
           options={{ tabBarBadge: shoppingList.length ? shoppingList.length :  null,
                      headerTitleAlign: 'center',
-                     headerStyle: {backgroundColor: '#f6b4c1'},
-                     headerTintColor: '#7b5a60',
+                     headerStyle: {backgroundColor: '#C0C0C0'},
+                     headerTintColor: '#696969',
                      headerTitleStyle: {fontWeight: 'bold', fontSize: 25},
                      tabBarLabelStyle: {fontSize: 15}                 
           }}
           
         />
-         <Tab.Screen 
+         {/* <Tab.Screen 
           name='Done List'
           component={Done}
           options={{ tabBarBadge: doneList.length ? doneList.length :  null,
@@ -114,7 +120,7 @@ function App() {
                     headerTitleStyle: {fontWeight: 'bold', fontSize: 25},
                     tabBarLabelStyle: {fontSize: 15}
           }}
-        />
+        /> */}
           <Tab.Screen 
           name='Items'
           component={ItemsTabNavigator}
@@ -144,7 +150,7 @@ function ItemsTabNavigator(){
                      <FontAwesome5 name={'plus'} size={20} color={'white'}/>
                     </TouchableOpacity></View>,
                     headerStyle: {backgroundColor: '#C0C0C0'},
-                    headerTintColor: '#696969',
+                    headerTintColor: '#094a85',
                     headerTitleStyle: {fontWeight: 'bold', fontSize: 25},
                     
                      
@@ -172,7 +178,7 @@ function StoresTabNavigator(){
                      <FontAwesome5 name={'plus'} size={20} color={'white'}/>
                     </TouchableOpacity></View>,
                     headerStyle: {backgroundColor: '#C0C0C0'},
-                    headerTintColor: '#696969',
+                    headerTintColor: '#275214',
                     headerTitleStyle: {fontWeight: 'bold', fontSize: 25}
                      
                   }}
@@ -197,7 +203,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 30,
-    backgroundColor: 'green',
+    backgroundColor: '#275214',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -205,7 +211,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 30,
-    backgroundColor: 'blue',
+    backgroundColor: '#094a85',
     justifyContent: 'center',
     alignItems: 'center',
   },
