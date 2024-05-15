@@ -145,10 +145,10 @@ function Stores({navigation}) {
               <View style={styles.modalView}>
                  <Text style={styles.modalText}>Do you want to delete {thisStore}?</Text>
             <View style={styles.modalButtonsContainer}>
-            <TouchableOpacity style={styles.cancelButton} onPress={()=>setModalVisible(!modalVisible)}>
-              <Text style={styles.cancelText}>Cancel</Text></TouchableOpacity>
               <TouchableOpacity style={styles.deleteButton} onPress={()=>{removeStore(thisStoreId);setModalVisible(false)}}>
-              <Text style={styles.deleteText}>Delete</Text></TouchableOpacity>
+              <Text style={styles.deleteText}>Yes, Delete {thisStore}</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.cancelButton} onPress={()=>setModalVisible(!modalVisible)}>
+              <Text style={styles.cancelText}>No, Cancel</Text></TouchableOpacity>
               </View>
             </View>
             </View>
@@ -161,7 +161,9 @@ function Stores({navigation}) {
           onRequestClose={()=>setEditModalVisible(!editModalVisible)}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                 {/* <Text style={styles.modalText}>Do you want to delete the {thisStore}?</Text> */}
+                <View style={styles.closeXView}>
+              <TouchableOpacity style={styles.closeModalButton} onPress={()=>{setEditModalVisible(!editModalVisible)}}>
+              <Text style={styles.closeX}>X</Text></TouchableOpacity></View>
             <View style={styles.modalButtonsContainer}>
             <TouchableOpacity style={styles.editModalButton} onPress={()=>{setEditModalVisible(!editModalVisible);navigateToAddStoreForm(editThisStore)}}>
               <Text style={styles.cancelText}>Edit {thisStore}</Text></TouchableOpacity>
@@ -337,6 +339,7 @@ modalView: {
   backgroundColor: '#B0E0E6',
   borderRadius: 20,
   padding: 35,
+  paddingTop: 55,
   alignItems: 'center',
   shadowColor: '#000',
   shadowOffset: {
@@ -353,8 +356,20 @@ modalText: {
   fontSize: 25,
   fontWeight: 'bold',
 },
+closeXView: {
+  // alignSelf: 'flex-end',
+  position: 'absolute',
+    top: 20,
+    right: 20, 
+},
+closeX: {
+  color: 'black',
+  fontSize: 23,
+  fontWeight: 'bold',
+  
+},
 modalButtonsContainer: {
-  flexDirection: 'row',
+  // flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
   margin: 10,
@@ -362,6 +377,7 @@ modalButtonsContainer: {
 cancelButton: {
   backgroundColor: 'blue', 
   borderRadius: 20,
+  width: '80%',
 },
 cancelText: {
   fontSize: 20,
@@ -374,11 +390,17 @@ deleteText: {
   color: 'white',
   margin: 15,
   fontWeight: 'bold',
+  textAlign: 'center',
+  // justifyContent: 'center',
 },
 deleteButton: {
   backgroundColor: '#FF0000', 
   borderRadius: 20, 
   margin: 20,
+  // justifyContent: 'center',  // Center content vertically
+  // alignItems: 'center',
+  width: '80%',
+  // paddingVertical: 15,
 },  
 editModalButton: {
   backgroundColor: 'blue', 
@@ -388,6 +410,7 @@ deleteEditModalButton: {
   backgroundColor: '#FF0000', 
   borderRadius: 20, 
   margin: 20,
+  width: 'auto',
 }
   });
 

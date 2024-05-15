@@ -21,6 +21,7 @@ function AddItemForm({navigation, route}) {
   const [isItem, setIsItem] = useState(thisitem ? thisitem.isItem : true)
   const [isList, setIsList] = useState(thisitem ? thisitem.isList : false)
   const [isDone, setIsDone] = useState(thisitem ? thisitem.isDone : false)
+  const [storeName, setStoreName] = useState(thisitem ? thisitem.storeName : null)
 
   useEffect(()=>{
     if(thisitem) {
@@ -44,6 +45,7 @@ function AddItemForm({navigation, route}) {
         setIsItem(true)
         setIsList(false)
         setIsDone(false)
+        setStoreName(null)
         // navigation.navigate("Items List")
         navigation.goBack()
         const itemsList = [...items, newItem]

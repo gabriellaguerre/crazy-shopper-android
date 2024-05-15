@@ -97,13 +97,13 @@ const returnItem = async (item) => {
 
 const returnStore = async (storeName) => {
   try {
-      console.log(storeName, 'nnn')
+      // console.log(storeName, 'nnn')
       console.log(stores, 'sss')
       const findStore = stores.find(store => store.name === storeName)
-      console.log(findStore, 'FInd Store')
-      console.log(findStore.id,' id')
+      // console.log(findStore, 'FInd Store')
+      // console.log(findStore.id,' id')
       const editStore = {id: findStore.id, name: findStore.name, description: findStore.description, isStore: true}
-      console.log(editStore, 'Edited Store')
+      // console.log(editStore, 'Edited Store')
 
        dispatch(updateStore(editStore))
       
@@ -133,18 +133,19 @@ const returnStore = async (storeName) => {
   const newStores = stores.filter(store => store.isStore === false).sort((a,b)=> a.name.localeCompare(b.name))
   
   const storeItems = (storeName) => {
-    console.log(storeName, 'stststs')
+    // console.log(storeName, 'stststs')
     const filteredItems = items.filter(item => item.isList && item.storeName === storeName);
-    console.log(filteredItems, 'filtered items')
+    // console.log(filteredItems, 'filtered items')
    
 
     if (filteredItems.length === 0) {
-      console.log(storeName, 'storename')
+      // console.log(storeName, 'storename')
     
         return  (
-      <View style={styles.buttonsContainer}>
-      <TouchableOpacity onPress={()=>{returnStore(storeName)}}>
+      <View >
+      <TouchableOpacity style={styles.returnStoreButton} onPress={()=>{returnStore(storeName)}}>
           <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
+          <Text style={styles.returnStore}>Return Store</Text>
       </TouchableOpacity>
     </View> // or any other message or component
       )
@@ -157,7 +158,10 @@ const returnStore = async (storeName) => {
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
       
              <TouchableOpacity onPress={()=>{ addToItemList(item); }}>
-               <FontAwesome5 name={'check'} size={25} color={'green'} />
+             <Image 
+                style={styles.addToCart}
+                source={require('./assets/shopping-cart-and-red-arrow-2026.png')} />
+               {/* <FontAwesome5 name={'check'} size={25} color={'green'} /> */}
              </TouchableOpacity>
              </View>
                
@@ -178,15 +182,6 @@ const returnStore = async (storeName) => {
              <Text style={styles.subtitle} numberOfLines={1}> {item.description}</Text>
               {storeItems(item.name)}
            
-              
-         
-                 {/* <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={()=>{returnStore(item)}}>
-                 <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
-                 </TouchableOpacity>
-              </View>  */}
-              
-             
            </View>                
        )}
        keyExtractor={(item, index) => index.toString()}
@@ -207,7 +202,7 @@ const returnStore = async (storeName) => {
                </TouchableOpacity>
 
              <TouchableOpacity onPress={()=>{ addToItemList(item); }}>
-               <FontAwesome5 name={'check'} size={25} color={'green'} />
+               <FontAwesome5 name={'check'} size={25} color={'green'} /> 
              </TouchableOpacity>
              </View>
              </View>                
@@ -249,6 +244,19 @@ const styles = StyleSheet.create({
   flexDirection: 'row',
   justifyContent: 'space-between'
  },
+ returnStoreButton: {
+  flexDirection: 'row',
+ },
+ returnStore: {
+  color: 'blue',
+  marginLeft: 10,
+  marginTop: 2,
+ },
+ addToCart: {
+  width: 30,
+  height: 30,
+  margin: 5,
+},
 /*****Add Item Round Blue Button */    
  button: {
    width: 60,

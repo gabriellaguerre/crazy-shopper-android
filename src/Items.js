@@ -191,6 +191,10 @@ function Items({navigation, route, handleDoneClick}) {
 
     const newItems = items.filter(item=> item.isItem === true).sort((a, b) => a.item.localeCompare(b.item));
     
+    const hasItems = items.length > 0;
+    const hasVisibleItems = newItems.length > 0;
+
+
     return (
      
        <View style={styles.body}>
@@ -214,26 +218,21 @@ function Items({navigation, route, handleDoneClick}) {
           {editStore && (
            <View>
            <View style={styles.bothButtons}> 
-            {/* <TouchableOpacity style={styles.goBackTouchable} onPress={()=>{returnItems().then(()=>returnStore(editStore).then(()=>navigation.goBack()))}}>
-              <Image 
-                style={styles.goBackImage}
-                source={require('./assets/left-arrow-6424.png')}/>
-          
-              </TouchableOpacity>   */}
             <TouchableOpacity style={styles.doneTouchable} onPress={()=>handleDone()}><Text style={styles.done}> Done </Text></TouchableOpacity>
             </View>
             <View style={styles.createShoppingListHeader}><Text style={styles.createShoppingList}>Choose Items For {editStore.name}</Text></View>
             </View>
           )}
-         {newItems && newItems.length > 0 ? (
+         {hasItems && !hasVisibleItems ? (
+          <View style={styles.blankScreen}/>
+         ):(
+          hasVisibleItems ? (
           <FlatList 
             data={newItems}
             renderItem={({ item }) => (
               
                 <View >
-                  {/* <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
-                  <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text> */}
-                  {/* <Text style={styles.subtitle}>{item.store}</Text> */}
+               
                 {editStore ? (
                   <View style={styles.storeListContainer}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
@@ -285,7 +284,7 @@ function Items({navigation, route, handleDoneClick}) {
 
          ):(
           <View style={styles.imageBody}>
-        <Image 
+          <Image 
           style={styles.logo}
           source={require('./assets/list.png')}
         />
@@ -304,6 +303,7 @@ function Items({navigation, route, handleDoneClick}) {
         )}
          
       </View>
+         )
          )}
      
       </View>      

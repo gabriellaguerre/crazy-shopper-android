@@ -31,20 +31,26 @@ function AddStoreForm({navigation, route}) {
   const createItem = async () => {
     try {
       if(name) {
-        const newStore = {id: nanoid(), name: name.toUpperCase(), description: description, isStore: isStore}
+        const storeExist = stores.find(store=> store.name === name.toUpperCase())
+        if(storeExist) {
+          Alert.alert('Warning', `${name.toUpperCase()} is already in your list`)
+        } else {
+          const newStore = {id: nanoid(), name: name.toUpperCase(), description: description, isStore: isStore}
         dispatch(addStore(newStore))
-        Alert.alert('Success', `Successfully added ${name}`)
+        Alert.alert('Success', `Successfully added ${name.toUpperCase()} as a store`)
         setName('')
         setDescription('')
         // setPrice('')
         // setStore('')
         setIsStore(true)
-        // setIsList(false)
+        // setIsList(false)s
         // setIsDone(false)
         navigation.navigate("Stores List")
         const storesList = [...stores, newStore]
         const jsonValue = JSON.stringify(storesList)
         await AsyncStorage.setItem('Stores', jsonValue)
+        }
+        
       } else {
         Alert.alert('Warning', 'Please enter a store name')
       }
@@ -56,10 +62,10 @@ function AddStoreForm({navigation, route}) {
   const editItem = async () => {
     try {
         if(name) {
-          const editStore = {id: thisStore.id, name, description, isStore}
+          const editStore = {id: thisStore.id, name: name.toUpperCase(), description, isStore}
           dispatch(updateStore(editStore))
           navigation.goBack()
-          Alert.alert('Success', `Successfully edited ${name}`)
+          Alert.alert('Success', `Successfully edited ${name.toUpperCase()}`)
           setName('')
           setDescription('')
           // setPrice('')
