@@ -119,7 +119,7 @@ function Items({navigation, route, handleDoneClick}) {
     }
     const returnItems = async () => {
       try {
-        console.log(items, 'items in return items')
+        // console.log(items, 'items in return items')
          const renewItems = items.filter(item => item.storeName === editStore.name)
          renewItems.map(async (item) => {
           const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: null, isItem: true, isList: false, isDone: false }
@@ -229,7 +229,7 @@ function Items({navigation, route, handleDoneClick}) {
                 {editStore ? (
                   <View style={styles.storeListContainer}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
-                  <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
+                  {/* <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text> */}
                    <TouchableOpacity onPress={()=>{addToShoppingList(item); }}>
                   {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
                 <Image 
@@ -241,7 +241,12 @@ function Items({navigation, route, handleDoneClick}) {
                 ):(
                   <View style={styles.listContainer}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
-                  <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
+                  {item.desc ? (
+                    <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
+                  ):(
+                   <></>
+                  )}
+                 
                 <View style={styles.buttonsContainer}>
                 <TouchableOpacity  onPress={()=>{addToShoppingList(item); }}>
                   {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
@@ -448,7 +453,7 @@ const styles = StyleSheet.create({
       width: 40,
       height:40,
       borderRadius: 30,
-      backgroundColor: 'blue',
+      backgroundColor: '#094a85',
       justifyContent: 'center',
       alignItems: 'center',
       margin: 10,

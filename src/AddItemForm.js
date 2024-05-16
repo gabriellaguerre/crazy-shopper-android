@@ -14,7 +14,7 @@ function AddItemForm({navigation, route}) {
   const items = useSelector(selectAllItems)
   const dispatch = useDispatch()
 
-  const [item, setItem] = useState(thisitem ? thisitem.item : '')
+  const [itemName, setItemName] = useState(thisitem ? thisitem.item : '')
   const [desc, setDesc] = useState(thisitem ? thisitem.desc : '')
   // const [price, setPrice] = useState(thisitem ? thisitem.price : 0)
   // const [store, setStore] = useState(thisitem ? thisitem.store : '')
@@ -25,7 +25,7 @@ function AddItemForm({navigation, route}) {
 
   useEffect(()=>{
     if(thisitem) {
-      setItem(thisitem.item);
+      setItemName(thisitem.item);
       setDesc(thisitem.desc);
       // setPrice(thisitem.price);
       // setStore(thisitem.store)
@@ -34,11 +34,17 @@ function AddItemForm({navigation, route}) {
 
   const createItem = async () => {
     try {
-      if(item) {
-        const newItem = {id: nanoid(), item: item, desc: desc, storeName: null, isItem: isItem, isList: isList, isDone: isDone}
+      // console.log(itemName, 'itemName')
+      if(itemName) {
+        const itemExist = items.find(item=> item.item.toLowerCase() === itemName.toLowerCase())
+      // console.log(itemExist, 'itemExist')
+        if(itemExist) {
+          Alert.alert('Warning', `${itemName} is already in your list`)
+        } else {
+        const newItem = {id: nanoid(), item: itemName, desc: desc, storeName: null, isItem: isItem, isList: isList, isDone: isDone}
         dispatch(addItem(newItem))
-        Alert.alert('Success', `Successfully added ${item}`)
-        setItem('')
+        Alert.alert('Success', `Successfully added ${itemName}`)
+        setItemName('')
         setDesc('')
         // setPrice('')
         // setStore('')
@@ -51,6 +57,7 @@ function AddItemForm({navigation, route}) {
         const itemsList = [...items, newItem]
         const jsonValue = JSON.stringify(itemsList)
         await AsyncStorage.setItem('Items', jsonValue)
+        }
       } else {
         Alert.alert('Warning', 'Please enter an item')
       }
@@ -61,12 +68,12 @@ function AddItemForm({navigation, route}) {
 
   const editItem = async () => {
     try {
-        if(item) {
-          const editItem = {id: thisitem.id, item, desc, storeName, isItem, isList, isDone}
+        if(itemName) {
+          const editItem = {id: thisitem.id, item: itemName, desc, storeName, isItem, isList, isDone}
           dispatch(updateItem(editItem))
           navigation.goBack()
-          Alert.alert('Success', `Successfully edited ${item}`)
-          setItem('')
+          Alert.alert('Success', `Successfully edited ${itemName}`)
+          setItemName('')
           setDesc('')
           // setPrice('')
           // setStore('')
@@ -95,8 +102,8 @@ function AddItemForm({navigation, route}) {
         <TextInput 
             style={styles.input}
             placeholder='Enter Item Name'
-            value={item}
-            onChangeText={(value)=>setItem(value)}
+            value={itemName}
+            onChangeText={(value)=>setItemName(value)}
             />
 
         <TextInput 

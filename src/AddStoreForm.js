@@ -28,7 +28,7 @@ function AddStoreForm({navigation, route}) {
     }
   },[thisStore])
 
-  const createItem = async () => {
+  const createStore = async () => {
     try {
       if(name) {
         const storeExist = stores.find(store=> store.name === name.toUpperCase())
@@ -59,7 +59,7 @@ function AddStoreForm({navigation, route}) {
     } 
   }
 
-  const editItem = async () => {
+  const editStore = async () => {
     try {
         if(name) {
           const editStore = {id: thisStore.id, name: name.toUpperCase(), description, isStore}
@@ -116,11 +116,11 @@ function AddStoreForm({navigation, route}) {
 
         <View>
           {!thisStore ? (
-          <TouchableOpacity style={styles.addButton} onPress={createItem}>
+          <TouchableOpacity style={styles.addButton} onPress={createStore}>
               <Text style={styles.addText}>+ Add To Stores List</Text>
            </TouchableOpacity >
           ):(
-          <TouchableOpacity  style={styles.editButton}  onPress={editItem}>  
+          <TouchableOpacity  style={styles.editButton}  onPress={editStore}>  
             <Text style={styles.editText}>Confirm Edit</Text>
             </TouchableOpacity>
             )}

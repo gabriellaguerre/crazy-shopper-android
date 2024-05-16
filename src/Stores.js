@@ -20,7 +20,7 @@ function Stores({navigation}) {
   const [thisStoreId, setThisStoreId] = useState('')
   const [thisStore, setThisStore] = useState('')
   const [editThisStore, setEditThisStore] = useState({})
-  const [resetStack, setResetStack] = useState(false)
+  const [thisStoreDesc, setThisStoreDesc] = useState('')
 
   // console.log(stores, 'sssssssssssss')
   useEffect(()=>{
@@ -166,6 +166,14 @@ function Stores({navigation}) {
                 <View style={styles.closeXView}>
               <TouchableOpacity style={styles.closeModalButton} onPress={()=>{setEditModalVisible(!editModalVisible)}}>
               <Text style={styles.closeX}>X</Text></TouchableOpacity></View>
+              {thisStoreDesc ? (
+              <View style={styles.storeData}>
+              <Text style={styles.storeName}>{thisStore}</Text>
+              <Text style={styles.storeDesc}>Description: {thisStoreDesc}</Text>
+              </View>
+              ):(
+               <></>
+              )}            
             <View style={styles.modalButtonsContainer}>
             <TouchableOpacity style={styles.editModalButton} onPress={()=>{setEditModalVisible(!editModalVisible);navigateToAddStoreForm(editThisStore)}}>
               <Text style={styles.cancelText}>Edit {thisStore}</Text></TouchableOpacity>
@@ -186,13 +194,20 @@ function Stores({navigation}) {
             numColumns={2} // Set the number of columns to 2
             renderItem={({ item: store }) => (
                 <View style={styles.listContainer}>
-                  <TouchableOpacity style={styles.storeButton} onPress={()=>{setEditModalVisible(!editModalVisible); setThisStore(store.name); setEditThisStore(store);setThisStoreId(store.id)}}>
+                  <TouchableOpacity style={styles.storeButton} onPress={()=>{setEditModalVisible(!editModalVisible); 
+                    setThisStore(store.name); 
+                    setEditThisStore(store);
+                    setThisStoreId(store.id); 
+                    setThisStoreDesc(store.description)
+                  }}
+                    
+                    >
                    <Image 
                     style={styles.logo}
                     source={require('./assets/store_pic.png')}
                   /></TouchableOpacity>
-                  <Text style={styles.title} numberOfLines={1}>{store.name}</Text>
-                  <Text style={styles.subtitle} numberOfLines={1}> {store.description}</Text>
+                  <Text style={styles.title} numberOfLines={1} >{store.name}</Text>
+                  <Text style={styles.subtitle} numberOfLines={1} > {store.description}</Text>
                             
                   <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={()=>{createShoppingList(store)}}>
@@ -233,15 +248,16 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
       backgroundColor: '#C0C0C0', 
     },
     listContainer: {
+     
       marginHorizontal: 20,
       marginTop: 30,
-      // width: '40%',
+      width: '40%',
       margin: 10,
-      alignSelf: 'center',
+      alignItems: 'center', 
+      justifyContent: 'center',
       backgroundColor: 'white',
       paddingLeft: 10,
       paddingRight: 10,
@@ -274,7 +290,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      // marginTop: 10,
+      marginTop: 10,
       marginBottom: 10,
       backgroundColor: '#6497b1',
       borderRadius: 5,
@@ -339,7 +355,7 @@ centeredView: {
 },
 modalView: {
   margin: 20,
-  backgroundColor: '#B0E0E6',
+  backgroundColor: '#c3d2bd',
   borderRadius: 20,
   padding: 35,
   paddingTop: 55,
@@ -378,7 +394,7 @@ modalButtonsContainer: {
   margin: 10,
 },
 cancelButton: {
-  backgroundColor: 'blue', 
+  backgroundColor: '#094a85', 
   borderRadius: 20,
   width: '80%',
 },
@@ -406,7 +422,7 @@ deleteButton: {
   // paddingVertical: 15,
 },  
 editModalButton: {
-  backgroundColor: 'blue', 
+  backgroundColor: '#094a85', 
   borderRadius: 20,
 },
 deleteEditModalButton: {
@@ -414,7 +430,25 @@ deleteEditModalButton: {
   borderRadius: 20, 
   margin: 20,
   width: 'auto',
-}
+},
+storeData: {
+  marginTop: 10,
+  marginBottom: 30,
+  backgroundColor: 'white',
+  borderRadius: 10,
+  elevation: 5,
+},
+storeName: {
+  fontSize: 20,
+  color: 'black',
+  margin: 5,
+  alignSelf: 'center',
+},
+storeDesc: {
+  fontSize: 15,
+  color: 'black',
+  margin: 10,
+},
   });
 
 export default Stores;

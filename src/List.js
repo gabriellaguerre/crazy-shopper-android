@@ -131,6 +131,11 @@ const returnStore = async (storeName) => {
 
 
   const newStores = stores.filter(store => store.isStore === false).sort((a,b)=> a.name.localeCompare(b.name))
+
+  const combinedData = [
+    ...newStores.map((store) => ({ ...store, type: 'store' })),
+    ...newItems.map((item) => ({ ...item, type: 'item' })),
+  ];
   
   const storeItems = (storeName) => {
     // console.log(storeName, 'stststs')
@@ -170,62 +175,106 @@ const returnStore = async (storeName) => {
                           
                 ))
  }
-  
- 
-  
-  return (
-      <>
-      <View style={styles.body}>
-      {newStores && newStores.length > 0 &&
-       <FlatList 
-       data={newStores}
-       renderItem={({ item }) => (
-           <View style={styles.listContainer}>
-             <Text style={styles.storeTitle} numberOfLines={1}>{item.name}</Text>
-             <Text style={styles.subtitle} numberOfLines={1}> {item.description}</Text>
-              {storeItems(item.name)}
-           
-           </View>                
-       )}
-       keyExtractor={(item, index) => index.toString()}
-      />      
-      }
-      {newItems && newItems.length > 0 ? (
-       <FlatList 
-         data={newItems}
-         renderItem={({ item }) => (
-             <View style={styles.listContainer}>
-               <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
-               <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-               <Text style={styles.subtitle}>{item.store}</Text>
-         
-               <View style={styles.buttonsContainer}>
-               <TouchableOpacity onPress={()=>{ returnItem(item)}}>
-                   <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
-               </TouchableOpacity>
 
-             <TouchableOpacity onPress={()=>{ addToItemList(item); }}>
-               <FontAwesome5 name={'check'} size={25} color={'green'} /> 
-             </TouchableOpacity>
-             </View>
-             </View>                
-         )}
-         keyExtractor={(item, index) => index.toString()}
-        />
-
-      ):(
-        newStores && newStores.length === 0 && 
-         <View style={styles.imageBody}>
-        <Image 
-          style={styles.logo}
-          source={require('./assets/fullyTransparentCart.png')}
-        />
+ const renderItem = ({ item }) => {
+  if (item.type === 'store') {
+    return (
+      <View style={styles.listContainer}>
+        <View style={styles.addAgain}>
+        <Text style={styles.storeTitle} numberOfLines={1}>{item.name}</Text>
+        <TouchableOpacity style={styles.buttonItem} onPress={()=>updateList(item)} >
+             <FontAwesome5 name={'plus'} size={20} color={'blue'}/>
+        </TouchableOpacity>
+        </View>
+        <Text style={styles.subtitle} numberOfLines={1}>{item.description}</Text>
+        {storeItems(item.name)}
       </View>
+    );
+  } else {
+    return (
+      <View style={styles.listContainer}>
+        <View style={styles.itemCart}>
+        <Text style={styles.itemTitle} numberOfLines={1}>{item.item}</Text>
+        <TouchableOpacity onPress={() => addToItemList(item)}>
+        <Image 
+                style={styles.addToCart}
+                source={require('./assets/shopping-cart-and-red-arrow-2026.png')} />
+         </TouchableOpacity>
+          </View>
+        {item.desc ? (
+           <Text style={styles.subtitle} numberOfLines={1}>{item.desc}</Text>
+        ):(
+          <></>
+        )}
+      </View>
+    );
+  }
+};
+
+const updateList = (editStore) => {
+  console.log(editStore, 'Item in update list')
+  navigation.navigate('Items List', {editStore})
+}
+ 
+return (
+  <View style={styles.body}>
+    <FlatList data={combinedData} renderItem={renderItem} keyExtractor={(item, index) => index.toString()} />
+  </View>
+);
+  
+//   return (
+//       <>
+//       <View style={styles.body}>
+//       {newStores && newStores.length > 0 &&
+//        <FlatList 
+//        data={newStores}
+//        renderItem={({ item }) => (
+//            <View style={styles.listContainer}>
+//              <Text style={styles.storeTitle} numberOfLines={1}>{item.name}</Text>
+//              <Text style={styles.subtitle} numberOfLines={1}> {item.description}</Text>
+//               {storeItems(item.name)}
+           
+//            </View>                
+//        )}
+//        keyExtractor={(item, index) => index.toString()}
+//       />      
+//       }
+//       {newItems && newItems.length > 0 ? (
+//        <FlatList 
+//          data={newItems}
+//          renderItem={({ item }) => (
+//              <View style={styles.listContainer}>
+//                <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
+//                <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
+//                <Text style={styles.subtitle}>{item.store}</Text>
+         
+//                <View style={styles.buttonsContainer}>
+//                <TouchableOpacity onPress={()=>{ returnItem(item)}}>
+//                    <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
+//                </TouchableOpacity>
+
+//              <TouchableOpacity onPress={()=>{ addToItemList(item); }}>
+//                <FontAwesome5 name={'check'} size={25} color={'green'} /> 
+//              </TouchableOpacity>
+//              </View>
+//              </View>                
+//          )}
+//          keyExtractor={(item, index) => index.toString()}
+//         />
+
+//       ):(
+//         newStores && newStores.length === 0 && 
+//          <View style={styles.imageBody}>
+//         <Image 
+//           style={styles.logo}
+//           source={require('./assets/fullyTransparentCart.png')}
+//         />
+//       </View>
           
-      )}
-   </View>      
-   </>
- )
+//       )}
+//    </View>      
+//    </>
+//  )
 }
 const styles = StyleSheet.create({
  body: {
@@ -289,6 +338,28 @@ storeListContainerTitle: {
 subtitle: {
   color: 'gray',
   fontSize: 20,
+  marginTop: 5,
+  marginBottom: 5,
+},
+
+itemCart: {
+  flexDirection:'row',
+  justifyContent: 'space-between',
+  marginBottom: 10,
+  marginTop: 10,
+},
+
+itemTitle: {
+ color: 'black',
+ fontSize: 20,
+},
+
+addAgain: {
+  flexDirection: 'row',
+},
+
+buttonItem: {
+
 },
 /*****Add Item Round Blue Button */    
  button: {

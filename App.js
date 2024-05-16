@@ -58,7 +58,7 @@ function App() {
                 size = focused ? 25 : 20
                 // color = focused ? 'green' : 'black'
                 
-            }else if(route.name==='Grocery List') {
+            }else if(route.name==='List') {
               iconName='cart-arrow-down'
               size = focused ? 25 : 20
               // color = focused ? '#7b5a60' : 'black'
@@ -99,15 +99,13 @@ function App() {
                     tabBarLabelStyle: {fontSize: 15}}}
         />
         <Tab.Screen 
-          name='Grocery List'
-          component={List} 
-          options={{ tabBarBadge: shoppingList.length ? shoppingList.length :  null,
-                     headerTitleAlign: 'center',
-                     headerStyle: {backgroundColor: '#C0C0C0'},
-                     headerTintColor: '#696969',
-                     headerTitleStyle: {fontWeight: 'bold', fontSize: 25},
-                     tabBarLabelStyle: {fontSize: 15}                 
+          name='List'
+          component={ListTabNavigator} 
+          options={{tabBarBadge: shoppingList.length ? shoppingList.length :  null,
+            headerShown: false,
+            tabBarLabelStyle: {fontSize: 15}
           }}
+          
           
         />
          {/* <Tab.Screen 
@@ -187,6 +185,34 @@ function StoresTabNavigator(){
           name='Store'
           component={AddStoreForm}
          />
+         <Stack.Screen 
+          name='Items List'
+          component={Items}
+          options={{headerShown: false}}
+         />
+      
+      </Stack.Navigator>
+  )
+}
+
+function ListTabNavigator(){
+  const navigation = useNavigation();
+  return(
+   
+      <Stack.Navigator>
+     
+      <Stack.Screen 
+          name='Grocery List'
+          component={List}
+          options={{ 
+            headerTitleAlign: 'center',
+            headerStyle: {backgroundColor: '#C0C0C0'},
+            headerTintColor: '#696969',
+            headerTitleStyle: {fontWeight: 'bold', fontSize: 25},
+            tabBarLabelStyle: {fontSize: 15}                 
+ }}
+         />
+       
          <Stack.Screen 
           name='Items List'
           component={Items}
