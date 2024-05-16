@@ -12,6 +12,7 @@ function Items({navigation, route, handleDoneClick}) {
  
  
   const { editStore } = route.params ? route.params : 0
+  // console.log(editStore, 'editStoreeeeee')
  
   const items = useSelector(selectAllItems)
   const stores = useSelector(selectAllStores)
@@ -88,7 +89,7 @@ function Items({navigation, route, handleDoneClick}) {
        
     }
     const handleDone = () => {
-      navigation.navigate('Grocery List')
+      navigation.navigate('List')
       navigation.goBack() 
     }
 

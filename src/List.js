@@ -149,7 +149,7 @@ const returnStore = async (storeName) => {
         return  (
       <View >
       <TouchableOpacity style={styles.returnStoreButton} onPress={()=>{returnStore(storeName)}}>
-          <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
+          <FontAwesome5 name={'arrow-left'} size={25} color={'#094a85'} />
           <Text style={styles.returnStore}>Return Store</Text>
       </TouchableOpacity>
     </View> // or any other message or component
@@ -181,11 +181,11 @@ const returnStore = async (storeName) => {
     return (
       <View style={styles.listContainer}>
         <View style={styles.addAgain}>
-        <Text style={styles.storeTitle} numberOfLines={1}>{item.name}</Text>
         <TouchableOpacity style={styles.buttonItem} onPress={()=>updateList(item)} >
-             <FontAwesome5 name={'plus'} size={20} color={'blue'}/>
+             <FontAwesome5 name={'plus'} size={20} color={'#094a85'}/>
         </TouchableOpacity>
         </View>
+        <Text style={styles.storeTitle} numberOfLines={1}>{item.name}</Text>
         <Text style={styles.subtitle} numberOfLines={1}>{item.description}</Text>
         {storeItems(item.name)}
       </View>
@@ -307,9 +307,10 @@ const styles = StyleSheet.create({
  returnStoreButton: {
   flexDirection: 'row',
   marginBottom: 5,
+  color: '#094a85'
  },
  returnStore: {
-  color: 'blue',
+  color: '#094a85',
   marginLeft: 10,
   marginTop: 2,
   marginBottom: 5,
@@ -355,11 +356,21 @@ itemTitle: {
 },
 
 addAgain: {
-  flexDirection: 'row',
+  // flexDirection: 'row',
+  alignItems: 'flex-end',
+  
+  
 },
 
 buttonItem: {
-
+  // backgroundColor: '#b5cbde',
+  borderRadius: 20,
+  width: 30,
+  height: 30,
+  justifyContent: 'center',
+  alignItems: 'center',
+  // color: '#094a85',
+  
 },
 /*****Add Item Round Blue Button */    
  button: {
