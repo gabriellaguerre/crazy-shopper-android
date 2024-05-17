@@ -21,7 +21,8 @@ function Items({navigation, route, handleDoneClick}) {
   const [modalVisible, setModalVisible] = useState(false)
   const [thisId, setThisId] = useState('')
   const [thisItem, setThisItem] = useState('')
-  // const [currentStore, setCurrentStore] = useState('')
+  const [showMenu, setShowMenu] = useState({})
+  const [clickToShow, setClickToShow] = useState(false)
   
 
  
@@ -101,17 +102,7 @@ function Items({navigation, route, handleDoneClick}) {
         const updatedStores = stores.map(store=>store.id === editStore.id ? editStore : store)
         const jsonStoreValue = JSON.stringify(updatedStores)
         await AsyncStorage.setItem('Stores', jsonStoreValue)
-    
-       
-        // const renewItems = items.filter(item => item.storeName === store.name)
-        // renewItems.forEach(async (item) => {
-        //   const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: null, isItem: true, isList: false, isDone: false }
-        //   dispatch(updateItem(editItem))
-        //   const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
-        //   const jsonItemValue = JSON.stringify(updatedItems)
-        //   await AsyncStorage.setItem('Items', jsonItemValue)
-        // })
-        
+           
     
     } catch (error) {
       console.log(error)
@@ -130,58 +121,15 @@ function Items({navigation, route, handleDoneClick}) {
           await AsyncStorage.setItem('Items', jsonItemValue)
         })
 
-        // const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, isItem: true, isList: false, isDone: false, storeName: null}
-        // dispatch(updateItem(editItem))
-        // const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
-        // const jsonItemValue = JSON.stringify(updatedItems)
-        // await AsyncStorage.setItem('Items', jsonItemValue)
     
     } catch (error) {
       console.log(error)
     }    
      
     }
-
-  //   const goBack = async () => {
-  //     const thisStore = {id: editStore.id, name: editStore.name, description: editStore.description, isStore: true}
-  //     dispatch(updateStore(thisStore))
-  //     let count = 0
-  //     const renewItems = items.filter(item => item.storeName === thisStore.name)
-  //     // console.log(renewItems, 'renew items')
-
-   
-  //     for (let i = 0; i < renewItems.length; i++){
-  //       let currentItem = renewItems[i]
-  //       // console.log(trial, 'fffff')
-  //       const newTrial = {id: currentItem.id, item: currentItem.item, desc: currentItem.desc, price: currentItem.price, storeName: null, isItem: true, isList: false, isDone: false}
-  //       // console.log(newTrial, 'f2f2')
-  //       dispatch(updateItem(newTrial))
-  //       const updatedItems = items.map(item=>item.id === newTrial.id ? newTrial : item)
-  //       const jsonItemValue = JSON.stringify(updatedItems)
-  //       await AsyncStorage.setItem('Items', jsonItemValue)
-  //       ++count
-  //    }
-  //   //  console.log(count, count === renewItems.length, renewItems.length, 'ccc')
-  //    if(count === renewItems.length) {
-  //     console.log(items, 'ITEMS LIST AFTER COUNT')  
-  //     navigation.goBack();
-  //  }
-     
-      
-    //  console.log(count, 'ccc')
-     
-    //   renewItems.map(async (item) => {
-    //      const editItem = {id: item.id, item: item.item, desc: item.desc, price: item.price, storeName: '', isItem: true, isList: false, isDone: false }
-    //      await dispatch(updateItem(editItem))
-    //      count++
-    //      const updatedItems = items.map(item=>item.id === editItem.id ? editItem : item)
-    //      const jsonItemValue = JSON.stringify(updatedItems)
-    //      await AsyncStorage.setItem('Items', jsonItemValue)
-    // });
-    // console.log(count, 'cccccc')
-    // navigation.goBack()     
-    // }
-
+    const toggleShowMenu = (id) => {
+      setShowMenu(prevState => ({ ...prevState, [id]: !prevState[id] }));
+    }
 
     const newItems = items.filter(item=> item.isItem === true).sort((a, b) => a.item.localeCompare(b.item));
     
@@ -241,21 +189,38 @@ function Items({navigation, route, handleDoneClick}) {
                   </View>
                 ):(
                   <View style={styles.listContainer}>
+
+                 <View style={styles.itemAndCart}>
                   <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
+                  <TouchableOpacity  onPress={()=>{addToShoppingList(item); }}>
+                <Image style={styles.addToCart} source={require('./assets/add-to-cart-3046.png')}/>
+                </TouchableOpacity>
+                </View>
+               
                   {item.desc ? (
                     <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
                   ):(
                    <></>
                   )}
+
+                  <TouchableOpacity onPress={()=>{toggleShowMenu(item.id)}}>
+                  {showMenu[item.id] ? (
+                     <Image 
+                     style={styles.arrows}
+                     source={require('./assets/arro-up-3100.png')}
+                   />
+                  ):(
+                  <Image 
+                  style={styles.arrows}
+                  source={require('./assets/arrow-down-3101.png')}
+                />
+                  )}
+                 </TouchableOpacity>
                  
-                <View style={styles.buttonsContainer}>
-                <TouchableOpacity  onPress={()=>{addToShoppingList(item); }}>
-                  {/* <FontAwesome5 name={'cart-plus'} size={25} color={'#32CD32'} /> */}
-                <Image 
-                style={styles.addToCart}
-                // color={'green'}
-                source={require('./assets/add-to-cart-3046.png')}/>
-                </TouchableOpacity>
+               
+                 {showMenu[item.id] ? (
+                 <View style={styles.buttonsContainer}>
+                
                 
                 <TouchableOpacity  onPress={()=>{navigateToAddItemForm(item)}}>
                   {/* <FontAwesome5 name={'pen'} size={25} color={'#000080'} /> */}
@@ -272,8 +237,13 @@ function Items({navigation, route, handleDoneClick}) {
                 source={require('./assets/trash-can-10417.png')}/>
                 </TouchableOpacity>
                 </View>
+                 ):(
+                  <></>
+                 )}
+              
                 </View>
-                )}
+               
+               )}
               
 
                 </View>                
@@ -389,11 +359,22 @@ const styles = StyleSheet.create({
       // justifyContent: '',
     },
     addToCart: {
-      width: 30,
-      height: 30,
+      width: 25,
+      height: 25,
       margin: 5,
-  
     },
+    arrows: {
+      width: 15,
+      height: 15,
+      margin: 5,
+    },
+    
+  itemAndCart: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    // marginRigth: 10,
+  },
 /*****Add Item Round Blue Button */    
     button: {
       width: 60,
@@ -421,13 +402,14 @@ const styles = StyleSheet.create({
       marginHorizontal: 15,
     },
     title: {
+      flex: 1,
       color: 'black',
-      fontSize: 30,
-      alignSelf: 'center',
+      fontSize: 20,
+      // alignSelf: 'center',
     },
     subtitle: {
       color: 'gray',
-      fontSize: 20,
+      fontSize: 15,
     },
    
 /**********When List is Empty*******/

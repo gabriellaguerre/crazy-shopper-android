@@ -12,7 +12,7 @@ function List({navigation}) {
   const stores = useSelector(selectAllStores)
   const dispatch = useDispatch()
 
-  const [itemMenu, setItemMenu] = useState(false)
+  const [showPlus, setShowPlus] = useState(false)
 
   useEffect(()=>{
     dispatch(deleteAllStores());
@@ -139,23 +139,27 @@ const returnStore = async (storeName) => {
     ...newItems.map((item) => ({ ...item, type: 'item' })),
   ];
   
-  const storeItems = (storeName) => {
-   
+  const storeItems = (storeName, item) => {
+   console.log(item, 'item in storeItem')
     const filteredItems = items.filter(item => item.isList && item.storeName === storeName);
     if(filteredItems.length > 0) {
-      setItemMenu(true)
+      setShowPlus(true)
     }
    
 
     if (filteredItems.length === 0) {
-      setItemMenu(false)
+      setShowPlus(false)
     
         return  (
-      <View >
+      <View style={styles.returnAndPlus}>
       <TouchableOpacity style={styles.returnStoreButton} onPress={()=>{returnStore(storeName)}}>
           <FontAwesome5 name={'arrow-left'} size={25} color={'#094a85'} />
           <Text style={styles.returnStore}>Return Store</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.buttonItem} onPress={()=>updateList(item)} >
+             <FontAwesome5 name={'plus'} size={20} color={'#094a85'}/>
+        </TouchableOpacity>
+
     </View> // or any other message or component
       )
     }
@@ -186,14 +190,19 @@ const returnStore = async (storeName) => {
   if (item.type === 'store') {
     return (
       <View style={styles.listContainer}>
-        <View style={styles.addAgain}>
-        <TouchableOpacity style={styles.buttonItem} onPress={()=>updateList(item)} >
-             <FontAwesome5 name={'plus'} size={20} color={'#094a85'}/>
-        </TouchableOpacity>
-        </View>
         <Text style={styles.storeTitle} numberOfLines={1}>{item.name}</Text>
         <Text style={styles.subtitle} numberOfLines={1}>{item.description}</Text>
-        {storeItems(item.name)}
+        {showPlus ? (
+          <View style={styles.onlyPlus}>
+          <TouchableOpacity style={styles.buttonItem} onPress={()=>updateList(item)} >
+             <FontAwesome5 name={'plus'} size={20} color={'#094a85'}/>
+        </TouchableOpacity>   
+        </View>
+        ):(
+          <></>
+        )}
+        
+        {storeItems(item.name, item)}
       </View>
     );
   } else {
@@ -203,8 +212,7 @@ const returnStore = async (storeName) => {
         <Text style={styles.itemTitle} numberOfLines={1}>{item.item}</Text>
         <TouchableOpacity onPress={() => addToItemList(item)}>
         <Image 
-                style={styles.addToCart}
-                source={require('./assets/shopping-cart-and-red-arrow-2026.png')} />
+          style={styles.addToCart} source={require('./assets/shopping-cart-and-red-arrow-2026.png')} />
          </TouchableOpacity>
           </View>
         {item.desc ? (
@@ -321,10 +329,18 @@ const styles = StyleSheet.create({
   marginTop: 2,
   marginBottom: 5,
  },
+ returnAndPlus: {
+  flexDirection: 'row',
+  justifyContent: 'space-between'
+ },
+ onlyPlus: {
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+ },
  addToCart: {
-  width: 30,
-  height: 30,
-  margin: 5,
+  width: 25,
+  height: 25,
+  // margin: 5,
 },
 storeTitle: {
   color: 'black',
@@ -338,15 +354,16 @@ storeTitle: {
   elevation: 5,
 },
 storeListContainerTitle: {
+ flex: 1,
  color: 'black',
  fontSize: 20,
 },
 
 subtitle: {
   color: 'gray',
-  fontSize: 20,
-  marginTop: 5,
-  marginBottom: 5,
+  fontSize: 15,
+  // marginTop: 5,
+  marginBottom: 10,
 },
 
 itemCart: {
@@ -357,6 +374,7 @@ itemCart: {
 },
 
 itemTitle: {
+ flex: 1,
  color: 'black',
  fontSize: 20,
 },
