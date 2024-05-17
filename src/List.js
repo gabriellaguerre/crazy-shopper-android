@@ -12,8 +12,8 @@ function List({navigation}) {
   const stores = useSelector(selectAllStores)
   const dispatch = useDispatch()
 
-  const [showPlus, setShowPlus] = useState(false)
-
+  const [showMenu, setShowMenu] = useState({})
+  
   useEffect(()=>{
     dispatch(deleteAllStores());
     dispatch(deleteAllItems());
@@ -21,6 +21,13 @@ function List({navigation}) {
     getStores()
   },[])
   
+  useEffect(() => {
+    const initialShowMenu = stores.reduce((acc, store) => {
+      acc[store.id] = true;
+      return acc;
+    }, {});
+    setShowMenu(initialShowMenu);
+  }, [stores]);
   
 
   const getStores = async () => {
@@ -126,6 +133,10 @@ const returnStore = async (storeName) => {
 }    
  
 }
+
+const toggleShowMenu = (id) => {
+  setShowMenu(prevState => ({ ...prevState, [id]: !prevState[id] }));
+}
   
   const newItems = items.filter(item=> item.isList === true && item.storeName === null)
                         .sort((a, b) => a.item.localeCompare(b.item))
@@ -139,16 +150,18 @@ const returnStore = async (storeName) => {
     ...newItems.map((item) => ({ ...item, type: 'item' })),
   ];
   
-  const storeItems = (storeName, item) => {
-   console.log(item, 'item in storeItem')
+  const storeItems = (storeName) => {
+  //  console.log(item, 'item in storeItem')
+  
     const filteredItems = items.filter(item => item.isList && item.storeName === storeName);
-    if(filteredItems.length > 0) {
-      setShowPlus(true)
-    }
+    // showPlus = filteredItems.length === 0;
+    // if(filteredItems.length > 0) {
+    //   setShowPlus(true)
+    // }
    
 
     if (filteredItems.length === 0) {
-      setShowPlus(false)
+     
     
         return  (
       <View style={styles.returnAndPlus}>
@@ -156,14 +169,14 @@ const returnStore = async (storeName) => {
           <FontAwesome5 name={'arrow-left'} size={25} color={'#094a85'} />
           <Text style={styles.returnStore}>Return Store</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonItem} onPress={()=>updateList(item)} >
+      {/* <TouchableOpacity style={styles.buttonItem} onPress={()=>updateList(item)} >
              <FontAwesome5 name={'plus'} size={20} color={'#094a85'}/>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
     </View> // or any other message or component
       )
     }
-        
+   
     return filteredItems
                 .sort((a, b) => a.item.localeCompare(b.item))
                 .map((item, index) => (
@@ -187,22 +200,35 @@ const returnStore = async (storeName) => {
  }
 
  const renderItem = ({ item }) => {
+ 
   if (item.type === 'store') {
+    const filteredItems = items.filter(item => item.isList && item.storeName === item.name);
+  
     return (
       <View style={styles.listContainer}>
+        <View style={styles.titleAndPlus}>
         <Text style={styles.storeTitle} numberOfLines={1}>{item.name}</Text>
-        <Text style={styles.subtitle} numberOfLines={1}>{item.description}</Text>
-        {showPlus ? (
-          <View style={styles.onlyPlus}>
-          <TouchableOpacity style={styles.buttonItem} onPress={()=>updateList(item)} >
+        <TouchableOpacity style={styles.buttonItem} onPress={()=>updateList(item)} >
              <FontAwesome5 name={'plus'} size={20} color={'#094a85'}/>
-        </TouchableOpacity>   
+        </TouchableOpacity>
         </View>
-        ):(
-          <></>
-        )}
-        
-        {storeItems(item.name, item)}
+        <Text style={styles.subtitle} numberOfLines={1}>{item.description}</Text>
+
+        <TouchableOpacity onPress={()=>{toggleShowMenu(item.id)}}>
+           {showMenu[item.id] ? (
+               <Image 
+                 style={styles.arrows}
+                 source={require('./assets/arro-up-3100.png')}
+                  />
+                  ):(
+            <Image 
+              style={styles.arrows}
+               source={require('./assets/arrow-down-3101.png')}
+                />
+             )}
+          </TouchableOpacity>
+        {showMenu[item.id] && storeItems(item.name)}
+       
       </View>
     );
   } else {
@@ -226,7 +252,7 @@ const returnStore = async (storeName) => {
 };
 
 const updateList = (editStore) => {
-  console.log(editStore, 'Item in update list')
+  // console.log(editStore, 'Item in update list')
   navigation.navigate('Items List', {editStore})
 }
  
@@ -236,60 +262,9 @@ return (
   </View>
 );
   
-//   return (
-//       <>
-//       <View style={styles.body}>
-//       {newStores && newStores.length > 0 &&
-//        <FlatList 
-//        data={newStores}
-//        renderItem={({ item }) => (
-//            <View style={styles.listContainer}>
-//              <Text style={styles.storeTitle} numberOfLines={1}>{item.name}</Text>
-//              <Text style={styles.subtitle} numberOfLines={1}> {item.description}</Text>
-//               {storeItems(item.name)}
-           
-//            </View>                
-//        )}
-//        keyExtractor={(item, index) => index.toString()}
-//       />      
-//       }
-//       {newItems && newItems.length > 0 ? (
-//        <FlatList 
-//          data={newItems}
-//          renderItem={({ item }) => (
-//              <View style={styles.listContainer}>
-//                <Text style={styles.title} numberOfLines={1}>{item.item}</Text>
-//                <Text style={styles.subtitle} numberOfLines={1}> {item.desc}</Text>
-//                <Text style={styles.subtitle}>{item.store}</Text>
-         
-//                <View style={styles.buttonsContainer}>
-//                <TouchableOpacity onPress={()=>{ returnItem(item)}}>
-//                    <FontAwesome5 name={'arrow-left'} size={25} color={'blue'} />
-//                </TouchableOpacity>
-
-//              <TouchableOpacity onPress={()=>{ addToItemList(item); }}>
-//                <FontAwesome5 name={'check'} size={25} color={'green'} /> 
-//              </TouchableOpacity>
-//              </View>
-//              </View>                
-//          )}
-//          keyExtractor={(item, index) => index.toString()}
-//         />
-
-//       ):(
-//         newStores && newStores.length === 0 && 
-//          <View style={styles.imageBody}>
-//         <Image 
-//           style={styles.logo}
-//           source={require('./assets/fullyTransparentCart.png')}
-//         />
-//       </View>
-          
-//       )}
-//    </View>      
-//    </>
-//  )
 }
+
+
 const styles = StyleSheet.create({
  body: {
    flex: 1,
@@ -345,18 +320,30 @@ const styles = StyleSheet.create({
 storeTitle: {
   color: 'black',
   fontSize: 30,
-  alignSelf: 'center',
-  textAlign: 'center',
+  marginLeft: 5,
+},
+  arrows: {
+      width: 15,
+      height: 15,
+      margin: 15,
+    },
+
+titleAndPlus: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
   backgroundColor: '#b5cbde',
-  width: '100%',
   borderRadius: 10,
+  width: '100%',
   marginTop: 10,
   elevation: 5,
+  alignItems: 'center',
 },
+
 storeListContainerTitle: {
  flex: 1,
  color: 'black',
  fontSize: 20,
+ 
 },
 
 subtitle: {

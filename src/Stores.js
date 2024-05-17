@@ -397,6 +397,7 @@ cancelButton: {
   backgroundColor: '#094a85', 
   borderRadius: 20,
   width: '80%',
+  elevation: 10,
 },
 cancelText: {
   fontSize: 20,
@@ -419,17 +420,21 @@ deleteButton: {
   // justifyContent: 'center',  // Center content vertically
   // alignItems: 'center',
   width: '80%',
+  elevation: 10,
   // paddingVertical: 15,
 },  
 editModalButton: {
   backgroundColor: '#094a85', 
   borderRadius: 20,
+  elevation: 10,
+  
 },
 deleteEditModalButton: {
   backgroundColor: '#FF0000', 
   borderRadius: 20, 
   margin: 20,
   width: 'auto',
+  elevation: 10,
 },
 storeData: {
   marginTop: 10,

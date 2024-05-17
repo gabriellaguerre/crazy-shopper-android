@@ -22,7 +22,7 @@ function Items({navigation, route, handleDoneClick}) {
   const [thisId, setThisId] = useState('')
   const [thisItem, setThisItem] = useState('')
   const [showMenu, setShowMenu] = useState({})
-  const [clickToShow, setClickToShow] = useState(false)
+  
   
 
  
@@ -222,14 +222,14 @@ function Items({navigation, route, handleDoneClick}) {
                  <View style={styles.buttonsContainer}>
                 
                 
-                <TouchableOpacity  onPress={()=>{navigateToAddItemForm(item)}}>
+                <TouchableOpacity  style={styles.fontButton}onPress={()=>{navigateToAddItemForm(item)}}>
                   {/* <FontAwesome5 name={'pen'} size={25} color={'#000080'} /> */}
                <Image 
                 style={styles.addToCart}
                 // color={'green'}
                 source={require('./assets/pencil-5824.png')}/>
                 </TouchableOpacity>              
-                <TouchableOpacity  onPress={()=>{setModalVisible(true); setThisId(item.id); setThisItem(item.item)}}>
+                <TouchableOpacity  style={styles.fontButton} onPress={()=>{setModalVisible(true); setThisId(item.id); setThisItem(item.item)}}>
                   {/* <FontAwesome5 name={'trash'} size={25} color={'red'} /> */}
                 <Image 
                 style={styles.addToCart}
@@ -353,20 +353,19 @@ const styles = StyleSheet.create({
       alignSelf: 'flex-end'  
 
     },
-    bothButtons: {
-   
-      // flexDirection: 'row',
-      // justifyContent: '',
+    fontButton: {
+      // elevation: 10,
     },
     addToCart: {
       width: 25,
       height: 25,
       margin: 5,
+      elevation: 10,
     },
     arrows: {
       width: 15,
       height: 15,
-      margin: 5,
+      margin: 10,
     },
     
   itemAndCart: {
@@ -396,6 +395,7 @@ const styles = StyleSheet.create({
       // marginHorizontal: 40,
       // paddingHorizontal: 10,
       // marginRight: 80,
+      marginBottom: 10,
      
     },
     eachButton: {
@@ -478,6 +478,7 @@ modalButtonsContainer: {
 cancelButton: {
   backgroundColor: 'blue', 
   borderRadius: 20,
+  elevation: 10,
 },
 cancelText: {
   fontSize: 20,
@@ -495,6 +496,7 @@ deleteButton: {
   backgroundColor: '#FF0000', 
   borderRadius: 20, 
   margin: 20,
+  elevation: 10,
 },  
   });
 
