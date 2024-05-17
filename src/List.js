@@ -12,6 +12,8 @@ function List({navigation}) {
   const stores = useSelector(selectAllStores)
   const dispatch = useDispatch()
 
+  const [itemMenu, setItemMenu] = useState(false)
+
   useEffect(()=>{
     dispatch(deleteAllStores());
     dispatch(deleteAllItems());
@@ -19,7 +21,7 @@ function List({navigation}) {
     getStores()
   },[])
   
-  // const [store, setStore] = useState('')
+  
 
   const getStores = async () => {
     try {
@@ -138,13 +140,15 @@ const returnStore = async (storeName) => {
   ];
   
   const storeItems = (storeName) => {
-    // console.log(storeName, 'stststs')
+   
     const filteredItems = items.filter(item => item.isList && item.storeName === storeName);
-    // console.log(filteredItems, 'filtered items')
+    if(filteredItems.length > 0) {
+      setItemMenu(true)
+    }
    
 
     if (filteredItems.length === 0) {
-      // console.log(storeName, 'storename')
+      setItemMenu(false)
     
         return  (
       <View >
@@ -172,8 +176,10 @@ const returnStore = async (storeName) => {
              </View>
              {index < filteredItems.length - 1 && <View style={styles.separator} />} 
              </View>
-                          
-                ))
+                )
+              
+              )
+
  }
 
  const renderItem = ({ item }) => {
