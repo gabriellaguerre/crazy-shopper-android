@@ -140,6 +140,10 @@ function Items({navigation, route, handleDoneClick}) {
     return (
      
        <View style={styles.body}>
+        {!editStore && (
+           <Text style={styles.totalItems}>Total Items: {items.length}</Text>
+        )}
+       
         <Modal 
           animationType='slide'
           transparent={true}
@@ -282,6 +286,12 @@ const styles = StyleSheet.create({
     body: {
       flex: 1,
       backgroundColor: '#C0C0C0',
+    },
+    totalItems: {
+      margin: 10,
+      fontWeight: 'bold',
+      fontSize: 15,
+      color: '#094a85'
     },
     listContainer: {
       justifyContent: 'space-between',

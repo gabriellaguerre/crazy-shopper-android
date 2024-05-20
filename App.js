@@ -11,9 +11,9 @@ import AddStoreForm from './src/AddStoreForm';
 import CreateShoppingListForm from './src/CreateShoppingListForm';
 import Stores from './src/Stores';
 import Splash from './src/Splash';
-import { selectAllItems } from './src/redux/itemsSlice';
+import { selectAllItems, shoppingItems } from './src/redux/itemsSlice';
 import { useSelector } from 'react-redux';
-import { TouchableOpacity, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 
 
 
@@ -26,6 +26,7 @@ function App() {
   // const doneList = shoppingItems.filter(item => item.isDone === true)
   const itemsList = shoppingItems.filter(item=> item.isItem)
 
+ 
   const [isSplash, setIsSplash] = useState(true);
  
   useEffect(()=>{
@@ -76,20 +77,11 @@ function App() {
               />
             )
           },
-          // tabBarOptions={
-          //   activeTintColor: 'blue',
-          //   inactiveTintColor: 'gray'
-
-          // }}
-        //   tabBarLabelStyle: ({color})=> {
-        //     if(route.name==='Stores') {
-        //       // iconName='store'
-        //       // size = focused ? 25 : 20
-        //       color = focused ? 'green' : 'black'
-        //   }
-        // }
+          tabBarActiveTintColor: '#094a85', // Color for active tab
+          tabBarInactiveTintColor: 'gray', // Color for inactive tab
       }
         )}
+      
         
       >
         <Tab.Screen 
@@ -176,7 +168,7 @@ function StoresTabNavigator(){
                      <FontAwesome5 name={'plus'} size={20} color={'white'}/>
                     </TouchableOpacity></View>,
                     headerStyle: {backgroundColor: '#C0C0C0'},
-                    headerTintColor: '#275214',
+                    headerTintColor: '#094a85',
                     headerTitleStyle: {fontWeight: 'bold', fontSize: 25}
                      
                   }}
@@ -229,7 +221,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 30,
-    backgroundColor: '#275214',
+    backgroundColor: '#094a85',
     justifyContent: 'center',
     alignItems: 'center',
   },
